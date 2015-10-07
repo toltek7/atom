@@ -1,0 +1,11 @@
+<atom:atom xmlns:atom="http://atom.com"
+           xmlns="http://www.w3.org/1999/xhtml"
+           xmlns:project="urn:jsptagdir:/WEB-INF/tags/project1"
+           xmlns:c="http://java.sun.com/jsp/jstl/core"
+           xmlns:jsp="http://java.sun.com/JSP/Page">
+
+ <br/> tag 1 content <br/>
+
+
+    <project:inits name="test1"/>
+</atom:atom>

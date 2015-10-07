@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<releases>
+    <!--NOTE: root folder is webapp-->
+    <release folder='../../../!!!delivery1'>
+        <!--NOTE: the first language is main, it placed in root folder, others will be in subfolders-->
+        <languages>ru ,en</languages>
+
+        <!--NOTE: common query param for all pages in delivery-->
+        <query>build=production</query>
+
+        <!--NOTE: set timestamp for internal CSS and JS-->
+        <timestamp>true</timestamp>
+
+        <!--NOTE: compress following resources-->
+        <compress-css>true</compress-css>
+        <compress-js>true</compress-js>
+        <compress-html>true</compress-html>
+
+        <!--NOTE: file path-->
+        <jspx>project1/index.jspx</jspx>
+        <jspx>project1/index2.jspx</jspx>
+        <jspx>project1/sub-folder1/index-sub.jspx</jspx>
+        <jspx>project1/sub-folder1/index-sub2.jspx</jspx>
+        <jspx>index.jspx</jspx>
+        <jspx>project2/index.jspx</jspx>
+        <!--<jspx>index1.jspx?temp=temp</jspx>-->
+        <!--<jspx>project2/index.jspx</jspx>-->
+<!--        <jspx>project2/index.jspx?fg/</jspx>
+        <jspx>project2/index.jspx?ggg=ss</jspx>-->
+        <!--<jspx>project3/index.jspx</jspx>-->
+    </release>
+
+    <release folder='   ../../../!!!delivery2   ' disable="true">
+        <languages>fr,en</languages>
+        <compress-html>0</compress-html>
+        <jspx>index.jspx</jspx>
+    </release>
+
+</releases>

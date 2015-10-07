@@ -1,0 +1,21 @@
+<atom:page xmlns:atom="http://atom.com"
+           xmlns:c="http://java.sun.com/jsp/jstl/core"
+           xmlns:utils="urn:jsptagdir:/WEB-INF/tags/utils">
+    <html xmlns="http://www.w3.org/1999/xhtml" lang="ru">
+    <head>
+        <title>Atom library main page</title>
+    </head>
+    <body>
+<h1>index page</h1>
+
+
+<iframe src="delivery.xml"  width="50%" height="30%"></iframe>
+
+<form action="html-release-build" method="get" target="_blank">
+    <input type="submit" value="create release" onclick="javascript:void(0)"/>
+</form>
+
+
+    </body>
+    </html>
+</atom:page>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+
+    <display-name>Atom Library</display-name>
+
+    <welcome-file-list>
+        <welcome-file>index.jspx</welcome-file>
+    </welcome-file-list>
+
+    <listener>
+        <listener-class>com.atom.ApplicationStart</listener-class>
+    </listener>
+
+    <listener>
+        <listener-class>com.atom.json.JsonProcessorInitializer</listener-class>
+    </listener>
+    
+    <listener>
+        <listener-class>com.atom.json.JsonProcessorRequestListener</listener-class>
+    </listener>
+
+    <listener>
+        <listener-class>com.atom.JsCssRequestListener</listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>HTMLRelease</servlet-name>
+        <servlet-class>com.atom.release.ReleaseManagerStart</servlet-class>
+        <load-on-startup>4</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>HTMLRelease</servlet-name>
+        <url-pattern>/html-release-build</url-pattern>
+    </servlet-mapping>
+
+
+</web-app>

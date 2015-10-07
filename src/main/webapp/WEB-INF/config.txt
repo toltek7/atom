@@ -1,0 +1,6 @@
+jsonFolderName=/data
+jsonRootVariableName=data
+jsonDefaultLanguage=ru
+releaseConfigFile=delivery.xml
+projectBuild=development
+inits=WEB-INF/tags/project1/inits.tagx
