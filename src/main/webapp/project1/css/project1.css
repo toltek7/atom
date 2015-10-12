@@ -1,16 +1,14 @@
-body{background: url( "../i/i-test.jpg"   ) no-repeat;
+.body {
+    max-width: 1000px;
+    margin: 0 auto;
+    border: 1px solid red;
+    border-radius:5px;
+    padding:20px;
 }
 
-.tet{
-    padding-left:0;
-    padding-right: 12px;
-    padding-bottom: 42px;
-    padding-top: 12px;
+.bkg-image-holder {
+    background: url("../i/i-test.jpg") no-repeat;
+    width:100%;
+    height:600px;
+    background-size: 100% 100%;
 }
-
-
-
-
-
-
-.saghajg{}

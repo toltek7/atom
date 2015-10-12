@@ -1,5 +1,4 @@
 <atom:page xmlns:atom="http://atom.com"
-           xmlns:c="http://java.sun.com/jsp/jstl/core"
            xmlns:utils="urn:jsptagdir:/WEB-INF/tags/utils">
     <html xmlns="http://www.w3.org/1999/xhtml" lang="ru">
     <head>
@@ -13,18 +12,19 @@
     <h2>atom:tag</h2>
     <atom:tag dropEmptyTag="true"> no tag (dropEmptyTag=true)</atom:tag><br/>
     <atom:tag> div tag </atom:tag><br/>
-    <atom:tag class="class"> div tag with class   lorem</atom:tag><br/>
+    <atom:tag class="class"> div tag with class lorem</atom:tag><br/>
     <atom:tag tag="span"> span tag </atom:tag><br/>
 
     <!--${data}-->
 
     <h2>utils:ul</h2>
 
-    <img src="i/i-test.jpg" />
+    <img src="i/i-test.jpg"/>
 
     <h1>gfgfgfgf</h1>
 
-    <utils:ul items="${data['ul-items']}" var="item"  varStatus="i" class="ul-class" data-attr="ul-data" liExtraAttributes="class=li-class,data-attr=li-data">
+    <utils:ul items="${data['ul-items']}" var="item" varStatus="i" class="ul-class" data-attr="ul-data"
+              liExtraAttributes="class=li-class,data-attr=li-data">
         <a class="a-class" href="${item.href}">${item.text}</a>
     </utils:ul>
 

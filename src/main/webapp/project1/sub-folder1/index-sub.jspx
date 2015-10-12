@@ -29,7 +29,7 @@
         <a class="a-class" href="${item.href}">${item.text}</a>
     </utils:ul>
 
-    <a href="index.jspx">index</a>
+    <a href="../index.jspx">index</a>
     <a href="index2.jspx">index2</a>
     <a href="sub-folder1/index-sub.jspx">index-sub2</a>
     <a href="sub-folder1/index-sub2.jspx">index-sub2</a>

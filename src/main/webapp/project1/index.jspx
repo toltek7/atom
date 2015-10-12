@@ -1,55 +1,70 @@
 <atom:page xmlns:atom="http://atom.com"
-           xmlns:c="http://java.sun.com/jsp/jstl/core"
            xmlns:test="urn:jsptagdir:/WEB-INF/tags/test"
            xmlns:utils="urn:jsptagdir:/WEB-INF/tags/utils">
     <html xmlns="http://www.w3.org/1999/xhtml" lang="ru">
     <head>
-      <title>Project1</title>
-      <!--<link rel="stylesheet" type="text/css" href="css/project1.css"/>-->
-      <!--<script type="text/javascript" src="js/project1.js"></script>-->
+        <title>Project1</title>
+        <!--<link rel="stylesheet" type="text/css" href="css/project1.css"/>-->
+        <!--<script type="text/javascript" src="js/project1.js"></script>-->
     </head>
     <body>
-    <h1>index page project1</h1>
-    ${param.lang}
-    <h2>atom:tag</h2>
-    <atom:tag dropEmptyTag="true"> no tag (dropEmptyTag=true)</atom:tag><br/>
-    <atom:tag> div tag </atom:tag><br/>
-    <atom:tag class="class"> div tag with class   lorem</atom:tag><br/>
-    <atom:tag tag="span"> span tag </atom:tag><br/>
-
-    ${data}
-
-    <h2>utils:ul</h2>
-fffff5567
-<test:tag3/>
-<test:tag1/>
-<test:tag1/>
-<test:tag2/>
-
-    <h1>gfgfgfgf</h1>
-
-    <utils:ul items="${data['ul-items']}" var="item"  varStatus="i" class="ul-class" data-attr="ul-data" liExtraAttributes="class=li-class,data-attr=li-data">
-        <a class="a-class" href="${item.href}">${item.text}</a>
-    </utils:ul>
+    <div class="body">
+        <div class="bkg-image-holder"></div>
 
 
-    <a href="index.jspx">index</a>
-    <a href="index2.jspx">index2</a>
-    <a href="sub-folder1/index-sub.jspx">index-sub2</a>
-    <a href="sub-folder1/index-sub2.jspx">index-sub2</a>
-    <a href="../index.jspx">index-root</a>
+        <h1>Project1 - index page.</h1>
 
-<!--    <script>
-        window.onload=function(){
-            alert("onload");
-        };
-        document.onDOMContentLoaded = function(){
-            alert(1);
-        };
-        document.addEventListener("DOMContentLoaded", function(){
-           alert("ready");
-       });
-    </script>-->
+        <h2>Language - ${not empty param.lang ? param.lang : "default"}</h2>
+
+        <p class="description">
+            <b>atom:tag</b> - is the basic tag based on which you can create any custom tag you want (see html example)
+        </p>
+        <ol>
+            <li>
+                <atom:tag dropEmptyTag="true"> without any tag (dropEmptyTag=true)</atom:tag>
+            </li>
+            <li>
+                <atom:tag>inside default tag - DIV</atom:tag>
+            </li>
+            <li>
+                <atom:tag tag="span"> inside SPAN tag</atom:tag>
+            </li>
+            <li>
+                <atom:tag tag="span" class="custom-class-name"> with castom classname</atom:tag>
+            </li>
+            <li>
+                <atom:tag tag="span" any="custom-attribute" id="someid"> with castom attributes</atom:tag>
+            </li>
+            <li>
+                <atom:tag extraAttributes="class=extra,data-attr=extra-data"> with extra (dynamic) attributes, added for nesting tags (see example with ul)</atom:tag>
+            </li>
+        </ol>
+
+
+        <p class="description"><b>utils:ul</b> - custom tag, uses nested tags and extraAttributes param</p>
+        <utils:ul items="${data['ul-items']}" var="item" varStatus="i" class="ul-class" data-attr="ul-data"
+                  liExtraAttributes="class=li-class,data-attr=li-data">
+            <a class="a-class" href="${item.href}">${item.text}</a>
+        </utils:ul>
+
+
+        ${data}
+
+
+        fffff5567
+        <test:tag3/>
+        <test:tag1/>
+        <test:tag1/>
+        <test:tag2/>
+
+        <p class="description"><b>utils:ul</b> - for testing</p>
+        <a href="index.jspx">index</a>
+        <a href="index2.jspx">index2</a>
+        <a href="sub-folder1/index-sub.jspx">index-sub2</a>
+        <a href="sub-folder1/index-sub2.jspx">index-sub2</a>
+        <a href="../index.jspx">index-root</a>
+
+    </div>
 
     </body>
     </html>
