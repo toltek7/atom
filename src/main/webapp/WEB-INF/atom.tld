@@ -18,20 +18,20 @@
 
     <tag>
         <name>page</name>
-        <tag-class>com.atom.TagPage</tag-class>
+        <tag-class>com.atom.tags.PageTag</tag-class>
         <body-content>scriptless</body-content>
     </tag>
 
 
     <tag>
         <name>atom</name>
-        <tag-class>com.atom.TagAtom</tag-class>
+        <tag-class>com.atom.tags.AtomTag</tag-class>
         <body-content>scriptless</body-content>
     </tag>
 
     <tag>
         <name>tag</name>
-        <tag-class>com.atom.TagHtml</tag-class>
+        <tag-class>com.atom.tags.HtmlTag</tag-class>
         <body-content>scriptless</body-content>
         <attribute>
             <name>tag</name>
@@ -56,13 +56,13 @@
 
     <tag>
         <name>inits</name>
-        <tag-class>com.atom.TagInits</tag-class>
+        <tag-class>com.atom.tags.InitsTag</tag-class>
         <body-content>scriptless</body-content>
     </tag>
 
     <tag>
         <name>js</name>
-        <tag-class>com.atom.TagJS</tag-class>
+        <tag-class>com.atom.tags.JsTag</tag-class>
         <body-content>scriptless</body-content>
         <attribute>
             <name>src</name>
@@ -104,7 +104,7 @@
 
     <tag>
         <name>css</name>
-        <tag-class>com.atom.TagCSS</tag-class>
+        <tag-class>com.atom.tags.CssTag</tag-class>
         <body-content>scriptless</body-content>
         <attribute>
             <name>src</name>

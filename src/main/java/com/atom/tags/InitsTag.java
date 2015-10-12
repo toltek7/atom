@@ -1,5 +1,6 @@
-package com.atom;
+package com.atom.tags;
 
+import com.atom.Application;
 import com.atom.release.Utils;
 
 import javax.servlet.ServletContext;
@@ -17,14 +18,14 @@ import java.io.StringWriter;
 /**
  * Created by toltek7 on 27.06.2015.
  */
-public class TagInits extends SimpleTagSupport {
+public class InitsTag extends SimpleTagSupport {
 
     @Override
     public void doTag() throws JspException, IOException {
         System.out.println("  --------   doTag inits tAG -------  ");
 
 
-        HttpServletRequest requestHttp = (HttpServletRequest)Application.getRequest();// request = (HttpServletRequest) context.getRequest();
+        HttpServletRequest requestHttp = (HttpServletRequest) Application.getRequest();// request = (HttpServletRequest) context.getRequest();
 
         StringWriter out = new StringWriter();
 
@@ -36,7 +37,7 @@ public class TagInits extends SimpleTagSupport {
         Application  app = Application.getInstance();
         app.getInitsFilesOrder();
 
-//        TagInitsProcessor filesOrder = new TagInitsProcessor("project1/index.jspx");
+//        InitsProcessorTag filesOrder = new InitsProcessorTag("project1/index.jspx");
 
        // System.out.println("  -------- 777 --------------------------------------------------  ");
 //        System.out.println(out.toString());

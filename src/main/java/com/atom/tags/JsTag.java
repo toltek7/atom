@@ -1,4 +1,7 @@
-package com.atom;
+package com.atom.tags;
+
+import com.atom.Application;
+import com.atom.Constants;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -13,7 +16,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 /**
  * Created by toltek7 on 11.01.2015.
  */
-public class TagJS extends SimpleTagSupport {
+public class JsTag extends SimpleTagSupport {
 
     private String  src   = "default.js";
     private String  where = "body";
@@ -26,7 +29,7 @@ public class TagJS extends SimpleTagSupport {
     @Override
     public void doTag() throws JspException, IOException {
 
-        Application  app     = Application.getInstance();
+        Application app     = Application.getInstance();
         JspWriter    out     = getJspContext().getOut();
         JspFragment  body    = getJspBody();
         StringWriter code    = new StringWriter();

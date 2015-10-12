@@ -1,5 +1,6 @@
-package com.atom;
+package com.atom.tags;
 
+import com.atom.Application;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -18,12 +19,12 @@ import java.util.Set;
  * NOTE: currently project works only with one init.tagx file (its name placed in config.txt)
  */
 
-public class TagInitsProcessor {
+public class InitsProcessorTag {
 
     public Set<String> js;
     public Set<String> css;
 
-    public TagInitsProcessor(){
+    public InitsProcessorTag(){
         js = new LinkedHashSet<String>();
         css = new LinkedHashSet<String>();
     }

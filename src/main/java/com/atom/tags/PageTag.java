@@ -1,5 +1,7 @@
-package com.atom;
+package com.atom.tags;
 
+import com.atom.Application;
+import com.atom.Constants;
 import com.atom.release.Utils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,14 +15,14 @@ import java.io.StringWriter;
 /**
  * Created by toltek7 on 19.12.2014.
  */
-public class TagPage extends SimpleTagSupport {
+public class PageTag extends SimpleTagSupport {
 
     private Boolean html5 = true;
 
     @Override
     public void doTag() throws JspException, IOException {
 
-        System.out.println("TagPage");
+        System.out.println("PageTag");
 
  /*       PageContext context = (PageContext) getJspContext();
 

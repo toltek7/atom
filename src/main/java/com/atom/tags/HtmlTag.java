@@ -1,4 +1,4 @@
-package com.atom;
+package com.atom.tags;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.DynamicAttributes;
@@ -15,7 +15,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 /**
  * Created by toltek7 on 25.12.2014.
  */
-public class TagHtml extends SimpleTagSupport implements DynamicAttributes {
+public class HtmlTag extends SimpleTagSupport implements DynamicAttributes {
     //private static Logger log = Logger.getLogger(startlistner.class.getName());
     protected Map<String, String> attributes = new HashMap<String, String>();
     boolean hasAttributes = false;
@@ -27,7 +27,7 @@ public class TagHtml extends SimpleTagSupport implements DynamicAttributes {
     @Override
     public void doTag() throws JspException, IOException {
 
-        System.out.println("TagHtml");
+        System.out.println("HtmlTag");
 
         this.attributes = stringToMap(extraAttributes, attributes);
 

@@ -1,6 +1,6 @@
 package com.atom;
 
-import com.atom.release.Utils;
+import com.atom.tags.InitsProcessorTag;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
@@ -26,7 +26,7 @@ public class Application {
 
     private static JsCssTagsProcessor jsTags, cssTags;
 
-    private static TagInitsProcessor srcOrder;
+    private static InitsProcessorTag srcOrder;
 
     public static Application getInstance() {
         if (instance == null) {
@@ -46,7 +46,7 @@ public class Application {
         this.context    = context;
         this.jsTags = new JsCssTagsProcessor();
         this.cssTags = new JsCssTagsProcessor();
-        this.srcOrder = new TagInitsProcessor();
+        this.srcOrder = new InitsProcessorTag();
         this.currentPage = null;
     }
 

@@ -1,5 +1,7 @@
-package com.atom;
+package com.atom.tags;
 
+import com.atom.Application;
+import com.atom.Constants;
 import com.atom.release.Utils;
 
 import javax.servlet.jsp.JspException;
@@ -12,7 +14,7 @@ import java.io.StringWriter;
 /**
  * Created by toltek7 on 07.09.2015.
  */
-public class TagCSS extends SimpleTagSupport {
+public class CssTag extends SimpleTagSupport {
 
     private String  src   = "";
     private String  where = "head";
