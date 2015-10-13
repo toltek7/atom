@@ -4,21 +4,23 @@
     <html xmlns="http://www.w3.org/1999/xhtml" lang="ru">
     <head>
         <title>Project1</title>
-        <!--<intercept-url pattern="/favicon.ico" access="ROLE_ANONYMOUS" />-->
-        <!--<link rel="shortcut icon" href="/PATH_TO_STATIC_FAVICON/favicon.ico" type="image/x-icon">-->
-        <atom:css src="project1/css/project1.css"/>
         <!--<link rel="stylesheet" type="text/css" href="css/project1.css"/>-->
         <!--<script type="text/javascript" src="js/project1.js"></script>-->
     </head>
     <body>
     <div class="body">
 
-
-        <h1>${data.atom}</h1>
-        <p>${data['atom-description']}</p>
-        <utils:ul items="${data['atom-features']}" var="item" varStatus="i">
-            ${item.text}
-        </utils:ul>
+        <h1>Atom</h1>
+        <p>
+            Atom -  is a jsp/tags framework implements templates mechanism of creating html.
+            <br/> it supports:
+            <ol>
+                <li>html delivery</li>
+                <li>castom tags creation</li>
+                <li>resoureces compression</li>
+                <li>multi language supporting</li>
+            </ol>
+        </p>
 
 
         <h2>Language - ${not empty param.lang ? param.lang : "default"}</h2>
@@ -74,6 +76,23 @@
 
         ${data}
 
+        <h3>infor for tests</h3>
+
+        <div class="bkg-image-holder"></div>
+
+
+        fffff5567
+        <test:tag3/>
+        <test:tag1/>
+        <test:tag1/>
+        <test:tag2/>
+
+        <p class="description"><b>utils:ul</b> - for testing</p>
+        <a href="index.jspx">index</a>
+        <a href="index2.jspx">index2</a>
+        <a href="sub-folder1/index-sub.jspx">index-sub2</a>
+        <a href="sub-folder1/index-sub2.jspx">index-sub2</a>
+        <a href="../index.jspx">index-root</a>
 
     </div>
 

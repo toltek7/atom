@@ -16,7 +16,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  * Created by toltek7 on 25.12.2014.
  */
 public class HtmlTag extends SimpleTagSupport implements DynamicAttributes {
-    //private static Logger log = Logger.getLogger(startlistner.class.getName());
+
     protected Map<String, String> attributes = new HashMap<String, String>();
     boolean hasAttributes = false;
 
@@ -67,7 +67,7 @@ public class HtmlTag extends SimpleTagSupport implements DynamicAttributes {
 
     public Map<String, String> stringToMap(String str, Map<String, String> map) {
 
-        if (isBlank(str)) return map;
+        if (isBlank(str) || str.contentEquals("{}")) return map;
 
         str = str.replace("{", "").replace("}", "").trim();
 

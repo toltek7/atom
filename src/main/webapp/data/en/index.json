@@ -1,7 +1,7 @@
 {
 
-  "atom":"Атом",
-  "atom-description":"Атом - инстреумент html шаблонов набор инстремунтов is a jsp/tags framework implements templates mechanism of creating html."
+  "atom":"Atom",
+  "atom-description":"Atom -  is a jsp/tags framework implements templates mechanism of creating html."
   "atom-features":[
     {"text":"html delivery"},
     {"text":"castom tags creation"},
@@ -17,12 +17,12 @@
 
 
   "shared":
-    {
+  {
 
 
 
-      "text":"tex txe txe t"
-    }
+    "text":"tex txe txe t"
+  }
 
 
 

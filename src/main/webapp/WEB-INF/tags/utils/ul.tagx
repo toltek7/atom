@@ -3,7 +3,7 @@
           xmlns:c="http://java.sun.com/jsp/jstl/core"
           xmlns:jsp="http://java.sun.com/JSP/Page">
 
-    <jsp:directive.tag dynamic-attributes="dynattrs" />
+    <jsp:directive.tag dynamic-attributes="dynamicAttr" />
     <jsp:directive.attribute name="liExtraAttributes"/>
 
     <jsp:directive.attribute name="items" type="java.lang.Object" required="true"/>
@@ -15,7 +15,7 @@
 
     <c:set var="body"><jsp:doBody/></c:set>
 
-    <atom:tag tag="ul" dropEmptyTag="${empty body ? true : false}" extraAttributes="${dynattrs}" >
+    <atom:tag tag="ul" dropEmptyTag="${empty body ? true : false}" extraAttributes="${dynamicAttr}">
         <c:forEach items="${items}" var="item" varStatus="i">
             <atom:tag tag='li' extraAttributes="${liExtraAttributes}"><jsp:doBody/></atom:tag>
         </c:forEach>
