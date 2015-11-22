@@ -106,8 +106,10 @@ public class Application {
     }
 
     public static void orderResourceFilesByInitTag(){
-        jsTags.sortByInitTagOrder(srcOrder.js);
-        cssTags.sortByInitTagOrder(srcOrder.css);
+        if(!srcOrder.isEmpty()){
+            jsTags.sortByInitTagOrder(srcOrder.js);
+            cssTags.sortByInitTagOrder(srcOrder.css);
+        }
     }
 
     public static String getCurrentPagePath(){
@@ -128,7 +130,7 @@ public class Application {
 
     public static void createListOfFilesOrder(){
         if(srcOrder.isEmpty()){
-            srcOrder.getFilesOrder("WEB-INF/tags/project1/inits.tagx");
+            srcOrder.getFilesOrder(Application.getProperty(Constants.CONFIG_INIT_FILE, Constants.DEFAULT_INIT_FILE)) ;
         }
     }
 

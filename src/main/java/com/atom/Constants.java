@@ -20,6 +20,9 @@ public class Constants {
     public static final String CONFIG_RELEASE_FILE = "releaseConfigFile";
     public static final String DEFAULT_RELEASE_FILE = "delivery.xml";
 
+    public static final String CONFIG_INIT_FILE = "inits";
+    public static final String DEFAULT_INIT_FILE = "WEB-INF/tags/project1/inits.tagx";
+
     public static final String DEFAULT_RELEASE_FOLDER = "../../../release";
 
     public static final String APPLICATION_BUILD_TYPE = "projectBuild";

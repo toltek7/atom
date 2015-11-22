@@ -37,15 +37,13 @@ public class JsCssOrderProcessor {
         org.jsoup.nodes.Document doc = null;
         try {
             doc = Jsoup.parse(input, "UTF-8");
+            js = collectFilesByTagName(doc,"atom:js");
+            css = collectFilesByTagName(doc,"atom:css");
+            print(js);
+            print(css);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        js = collectFilesByTagName(doc,"atom:js");
-        css = collectFilesByTagName(doc,"atom:css");
-
-        print(js);
-        print(css);
 
     }
     public LinkedHashSet<String> collectFilesByTagName(org.jsoup.nodes.Document doc, String tagName){
