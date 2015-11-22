@@ -1,0 +1,20 @@
+<atom:page xmlns:atom="http://atom.com"
+           xmlns:test="urn:jsptagdir:/WEB-INF/tags/test"
+           xmlns:utils="urn:jsptagdir:/WEB-INF/tags/utils">
+    <html xmlns="http://www.w3.org/1999/xhtml" lang="ru">
+    <head>
+        <title>Project1</title>
+        <!--<link rel="stylesheet" type="text/css" href="css/project1.css"/>-->
+        <!--<script type="text/javascript" src="js/project1.js"></script>-->
+    </head>
+    <body>
+    <div class="body">
+        <h1>test JS order 3-1-2</h1>
+        <test:tag3/>
+        <test:tag1/>
+        <test:tag2/>
+    </div>
+
+    </body>
+    </html>
+</atom:page>

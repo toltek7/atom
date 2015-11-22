@@ -1,7 +1,5 @@
 package com.atom;
 
-import com.atom.tags.InitsProcessorTag;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -24,9 +22,9 @@ public class Application {
     private static ServletContext context;
     public static String currentPage;
 
-    private static JsCssTagsProcessor jsTags, cssTags;
+    private static JsCssManager jsTags, cssTags;
 
-    private static InitsProcessorTag srcOrder;
+    private static JsCssOrderProcessor srcOrder;
 
     public static Application getInstance() {
         if (instance == null) {
@@ -44,9 +42,9 @@ public class Application {
         this.properties = properties;
         this.root       = context.getRealPath(File.separator);
         this.context    = context;
-        this.jsTags = new JsCssTagsProcessor();
-        this.cssTags = new JsCssTagsProcessor();
-        this.srcOrder = new InitsProcessorTag();
+        this.jsTags = new JsCssManager();
+        this.cssTags = new JsCssManager();
+        this.srcOrder = new JsCssOrderProcessor();
         this.currentPage = null;
     }
 
@@ -63,21 +61,18 @@ public class Application {
     }
 
     public static boolean setBuildType(String query){
-
         isProductionBuild = false;
-        
         if(!isBlank(query) && query.equalsIgnoreCase(Constants.BUILD_TYPE_PRO) ||
            getProperty(Constants.APPLICATION_BUILD_TYPE,Constants.DEFAULT_BUILD_TYPE).equalsIgnoreCase(Constants.BUILD_TYPE_PRO)     )
             isProductionBuild = true;
-            
         return isProductionBuild;
     }
 
-    public static void addJsTag(String where, String src,  String on, String code, boolean async, boolean defer, boolean mergeInSingleFile){
+    public static void putJs(String where, String src,  String on, String code, boolean async, boolean defer, boolean mergeInSingleFile){
         jsTags.put(where, src, on, code, async, defer, mergeInSingleFile);
     }
 
-    public static void addCssTag(String where, String src, String code, boolean mergeInSingleFile){
+    public static void putCss(String where, String src, String code, boolean mergeInSingleFile){
         cssTags.put(where, src, code, mergeInSingleFile);
     }
 
@@ -131,7 +126,7 @@ public class Application {
 
     }
 
-    public static void getInitsFilesOrder(){
+    public static void createListOfFilesOrder(){
         if(srcOrder.isEmpty()){
             srcOrder.getFilesOrder("WEB-INF/tags/project1/inits.tagx");
         }

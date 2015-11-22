@@ -65,6 +65,14 @@
 
         <p class="description">
             <b>atom:js</b> - js tag
+            <br/> where - head/body
+            * src  - src attr of js files
+            * on - event, to execute the code (document.ready or load or any custom event)
+            * code - any code inside <script/> tag
+            * async - async attribute of script
+            * defer - defer attribute of script
+            * mergeInSingleFile - if true, the script placed to the some common.js file and src link to this common.js file
+
         </p>
 
         <p class="description">
@@ -74,6 +82,10 @@
 
         ${data}
 
+
+        js where src on asyn/defer merge
+        body
+if(inline) asyn/defer = 0 where=head
 
     </div>
 

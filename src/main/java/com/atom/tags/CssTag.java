@@ -13,6 +13,8 @@ import java.io.StringWriter;
 
 /**
  * Created by toltek7 on 07.09.2015.
+ * Process css tag, add all info about this tag in CSS Manager, wich after processing all included css
+ * put them on page in corresponding order
  */
 public class CssTag extends SimpleTagSupport {
 
@@ -22,13 +24,11 @@ public class CssTag extends SimpleTagSupport {
 
     public void doTag() throws IOException, JspException {
 
-
         JspWriter out     = getJspContext().getOut();
-        JspFragment body    = getJspBody();
-        StringWriter code    = new StringWriter();
+        JspFragment body  = getJspBody();
+        StringWriter code = new StringWriter();
 
         if(body != null) body.invoke(code);
-
 
         String processedCode = Utils.trimString(code.toString());
 
@@ -44,13 +44,8 @@ public class CssTag extends SimpleTagSupport {
             this.where = "head";
         }
 
-        Application.addCssTag(this.where, this.src, processedCode, this.merge);
-        out.write("<div>");
-//        if (body != null) body.invoke(null);
-        out.write(this.src);
-        out.write("</div>");
-
-
+        Application.putCss(this.where, this.src, processedCode, this.merge);
+//        out.write("<div> CSS tag: " + this.src + "</div>");
 
     }
 

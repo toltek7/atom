@@ -25,13 +25,13 @@ import java.util.*;
  * NOTE: if <js></js> executes on "inline", than src placed on <head></head> automatically + dropped async and defer params
  * NOTE: html <script></script> is also supported but not processed thru this code
  */
-public class JsCssTagsProcessor {
+public class JsCssManager {
 
     private Map<String, Map<String, boolean[]>> srcHolder;
     private Map<String, HashSet> codeHolder;
     private boolean isSorted; //indicated whether we sorted src by inits.tag order
 
-    protected JsCssTagsProcessor() {
+    protected JsCssManager() {
         this.srcHolder = new LinkedHashMap<String, Map<String, boolean[]>>();
         this.codeHolder = new LinkedHashMap<String, HashSet>();
         this.isSorted = false;
@@ -66,7 +66,9 @@ public class JsCssTagsProcessor {
 
     }
 
-
+    /**
+     * put css
+     * */
     public void put(String where, String src, String code, boolean mergeInSingleFile) {
         put(where, src, null, code, false, false, mergeInSingleFile);
     }
@@ -89,40 +91,37 @@ public class JsCssTagsProcessor {
     private String collectTags(String tagTemplate, String were, String currentPagePath) {
         Map<String, boolean[]> srcMap = srcHolder.get(were),
                                srcInHead = srcHolder.get("head");
+
+        if(srcMap == null || srcMap.isEmpty()) return null;
+
         String attribute, src;
         StringBuilder scripts = new StringBuilder();
         boolean[] array;
 
-        if (srcMap != null && !srcMap.isEmpty()) {
+        for (Map.Entry entry : srcMap.entrySet()) {
+            src = (String) entry.getKey();
 
-            for (Map.Entry entry : srcMap.entrySet()) {
-
-                src = (String) entry.getKey();
-
-                //NOTE: check whether we have such script in head
-                if(!(were.equals("body") && (srcInHead != null && srcInHead.containsKey(src)))){
-
-                    array = (boolean[]) entry.getValue();
-                    attribute = "";
-                    if (array[0])        attribute = "async=''";
-                    else if (array[1])   attribute = "defer=''";
-
-                    if (!array[2]) {//not mergeInSingleFile
-                        Path path = new Path(src,currentPagePath);
-                        scripts.append(String.format(tagTemplate, path.relatedPath, attribute));
-
-                        Utils.print("currentPagePath: "+currentPagePath);
-                        Utils.print("path.relatedPath: "+path.relatedPath);
-                        Utils.print(String.format(tagTemplate, path.relatedPath, attribute));
-                    }
-                    else {
-                        //todo merge scrip in common file
-                    }
-
+            //NOTE: check whether we have such script in head
+            if(were.equals("head") || !(srcInHead != null && srcInHead.containsKey(src))){
+                array = (boolean[]) entry.getValue();
+                attribute = "";
+                if (array[0])        attribute = "async=''";
+                else if (array[1])   attribute = "defer=''";
+                if (!array[2]) {//not mergeInSingleFile
+                    Path path = new Path(src,currentPagePath);
+                    scripts.append(String.format(tagTemplate, path.relatedPath, attribute));
+                    //Utils.print("currentPagePath: " + currentPagePath);
+                    //Utils.print("path.relatedPath: " + path.relatedPath);
+                    //Utils.print(String.format(tagTemplate, path.relatedPath, attribute));
+                }
+                else {
+                    //todo merge scrip in common file
                 }
 
             }
+
         }
+
 
         return scripts.toString();
     }
@@ -176,9 +175,7 @@ public class JsCssTagsProcessor {
     private void sortTags(String key, Set<String> orderedList){
         Map<String, boolean[]> sortedMap = new LinkedHashMap<String, boolean[]>();
         Map<String, boolean[]> curMap = srcHolder.get(key);
-
         if(curMap == null || curMap.isEmpty()) return;
-
         for(String s : orderedList){
             if(curMap.containsKey(s)){
                 sortedMap.put(s,curMap.get(s));

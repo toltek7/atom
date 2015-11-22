@@ -1,12 +1,11 @@
 package com.atom.tags;
 
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.DynamicAttributes;
 import javax.servlet.jsp.tagext.JspFragment;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 import java.io.IOException;
-
-import javax.servlet.jsp.JspWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,22 +18,16 @@ public class HtmlTag extends SimpleTagSupport implements DynamicAttributes {
 
     protected Map<String, String> attributes = new HashMap<String, String>();
     boolean hasAttributes = false;
-
     private String tag = "div";
     private String extraAttributes = null;
     private Boolean dropEmptyTag = false;
 
     @Override
     public void doTag() throws JspException, IOException {
-
-        System.out.println("HtmlTag");
-
+        //System.out.println("HtmlTag");
         this.attributes = stringToMap(extraAttributes, attributes);
-
         JspWriter out = getJspContext().getOut();
-
         JspFragment body = getJspBody();
-
         String startTag = getStartTag(tag, body != null);
 
         if (!hasAttributes && dropEmptyTag) {
@@ -47,9 +40,7 @@ public class HtmlTag extends SimpleTagSupport implements DynamicAttributes {
     }
 
     private String getStartTag(String tagName, boolean hasBody) {
-
         StringBuilder startTag = new StringBuilder("<" + tagName);
-
         for (Map.Entry<String, String> entry : this.attributes.entrySet()) {
             String attributeName = entry.getKey();
             if (!attributeName.equals("tag") && !attributeName.equals("dropEmptyTag")) {
@@ -66,18 +57,13 @@ public class HtmlTag extends SimpleTagSupport implements DynamicAttributes {
     }
 
     public Map<String, String> stringToMap(String str, Map<String, String> map) {
-
         if (isBlank(str) || str.contentEquals("{}")) return map;
-
         str = str.replace("{", "").replace("}", "").trim();
-
         String[] pairs = str.split(",");
-
         for (String s : pairs) {
             String[] pair = s.trim().split("=");
             if (isBlank(map.get(pair[0]))) map.put(pair[0], pair[1]);
         }
-
         return map;
     }
 
@@ -94,13 +80,9 @@ public class HtmlTag extends SimpleTagSupport implements DynamicAttributes {
     }
 
     public void setDynamicAttribute(String uri, String localName, Object value) throws JspException {
-
         if (value == null) return;
-
         String stringValue = value.toString().trim();
-
         if (!stringValue.isEmpty()) this.attributes.put(localName, stringValue);
-
     }
 
 }

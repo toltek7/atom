@@ -1,4 +1,4 @@
-package com.atom.tags;
+package com.atom;
 
 import com.atom.Application;
 import org.jsoup.Jsoup;
@@ -19,19 +19,19 @@ import java.util.Set;
  * NOTE: currently project works only with one init.tagx file (its name placed in config.txt)
  */
 
-public class InitsProcessorTag {
+public class JsCssOrderProcessor {
 
     public Set<String> js;
     public Set<String> css;
 
-    public InitsProcessorTag(){
+    public JsCssOrderProcessor(){
         js = new LinkedHashSet<String>();
         css = new LinkedHashSet<String>();
     }
 
     public void getFilesOrder(String path){
 
-        System.out.println("  ---   getFilesOrder   ---  ");
+        //System.out.println("  ---   getFilesOrder   ---  ");
 
         File input = new File(Application.root + File.separator + path);
         org.jsoup.nodes.Document doc = null;

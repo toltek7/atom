@@ -10,11 +10,11 @@ inits 7777777777777777777777777777777777777777777
     <c:choose>
         <c:when test="${name == 'test2'}">
             <!--<atom:css src="project2/css/2.css"/>-->
-            <atom:js src="project1/js/test1.js" where="inline" on="ready" async="true"/>
-            <atom:js src="project1/js/test2.js" where="inline" on="ready" async="true">
+            <atom:js src="project1/js/test2.js" where="inline" on="ready" async="true"/>
+            <atom:js src="project1/js/test1.js" where="inline" on="ready" async="true">
                 console.log("2  22  fff sode 7777777777777777777 rest 2");
             </atom:js>
-
+            <atom:css src="project1/css/project26.css"/>
             <!--<script src="js/test2.js"></script>-->
         </c:when>
         <c:when test="${name == 'test3'}">

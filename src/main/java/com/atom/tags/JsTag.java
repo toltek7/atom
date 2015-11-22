@@ -18,9 +18,9 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  */
 public class JsTag extends SimpleTagSupport {
 
-    private String  src   = "default.js";
-    private String  where = "body";
-    private String  on    = "ready";
+    private String src = "default.js";
+    private String where = "body";
+    private String on = "ready";
     private Boolean async = false;
     private Boolean defer = false;
     private Boolean merge = false;
@@ -29,21 +29,17 @@ public class JsTag extends SimpleTagSupport {
     @Override
     public void doTag() throws JspException, IOException {
 
-        Application app     = Application.getInstance();
-        JspWriter    out     = getJspContext().getOut();
-        JspFragment  body    = getJspBody();
-        StringWriter code    = new StringWriter();
-       
-        if(body != null) body.invoke(code);
+        JspWriter out = getJspContext().getOut();
+        JspFragment body = getJspBody();
+        StringWriter code = new StringWriter();
+
+        if (body != null) body.invoke(code);
 
         String processedCode = this.processCode(code);
 
-//        printInputs(processedCode);
-
-
         if (this.where.equals("inline")) {
-            if(!processedCode.isEmpty()){
-                out.write(String.format(Constants.SCRIPT_TAG_TEMPLATE,processedCode));
+            if (!processedCode.isEmpty()) {
+                out.write(String.format(Constants.SCRIPT_TAG_TEMPLATE, processedCode));
                 this.async = false;
                 this.defer = false;
                 processedCode = null;
@@ -51,17 +47,8 @@ public class JsTag extends SimpleTagSupport {
             this.where = "head";
         }
 
-        Application.addJsTag(this.where, this.src, this.on, processedCode, this.async, this.defer, this.merge);
-
-        out.write("<div>");
-//        if (body != null) body.invoke(null);
-        out.write(this.src);
-        out.write("</div>");
-        //    context.
-        /*System.out.println("servlet path= " + request.getServletPath());
-        System.out.println("request URL= " + request.getRequestURL());
-        System.out.println("request URI= " + request.getRequestURI());*/
-        //  String rootPath = getJspContext().getRealPath(File.separator);
+        Application.putJs(this.where, this.src, this.on, processedCode, this.async, this.defer, this.merge);
+        //out.write("<div> JS tag: " + this.src + "</div>");
     }
 
     public void setSrc(String src) {
@@ -102,7 +89,7 @@ public class JsTag extends SimpleTagSupport {
         return code.toString().replaceAll("\\s", " ").trim();
     }
 
-    private void printInputs(String code){
+    private void printInputs(String code) {
         System.out.println("  ---   src   ---  " + this.src);
         System.out.println("  ---   where ---  " + this.where);
         System.out.println("  ---   on    ---  " + this.on);
