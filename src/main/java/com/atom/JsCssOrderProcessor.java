@@ -65,7 +65,7 @@ public class JsCssOrderProcessor {
     }
 
     public void print(Set<String> set){
-        System.out.println("print set");
+        System.out.println("inits order");
         for(String s: set){
             System.out.println(s);
         }

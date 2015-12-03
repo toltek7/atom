@@ -150,11 +150,14 @@ public class FileManager {
         }
     }
 
-    public static void removeFile(String file){
+    public static void removeFile(String path){
         try {
-            FileUtils.forceDelete(new File(file));
+            File file = new File(path);
+            if(file.exists()){
+                FileUtils.forceDelete(file);
+            }
         } catch (IOException e) {
-            System.out.println("Warning[FileManager]: " + file + " can't be removed. " + e);
+            System.out.println("Warning[FileManager]: " + path + " can't be removed. " + e);
         }
     }
 

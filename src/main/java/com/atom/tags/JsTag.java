@@ -102,7 +102,7 @@ public class JsTag extends SimpleTagSupport {
                 out.write(String.format(Constants.SCRIPT_TAG_TEMPLATE, content));
                 this.code = null;
             }
-            //printInputs("");
+            //print();
         }
 
         //defer has more force
@@ -117,10 +117,10 @@ public class JsTag extends SimpleTagSupport {
             this.code = null;
         }
 
-        //printInputs("");
+        //print();
     }
 
-    private void printInputs(String code) {
+    private void print() {
         System.out.println("  ---   src   ---  " + this.src);
         System.out.println("  ---   where ---  " + this.where);
         System.out.println("  ---   on    ---  " + this.on);
@@ -128,7 +128,7 @@ public class JsTag extends SimpleTagSupport {
         System.out.println("  ---   defer ---  " + this.defer);
         System.out.println("  ---   merge ---  " + this.merge);
         System.out.println("  ---   inline---  " + this.inline);
-        System.out.println("  ---   code  ---  " + code);
+        System.out.println("  ---   code  ---  " + this.code);
     }
 
 }

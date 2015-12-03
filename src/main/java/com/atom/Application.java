@@ -81,11 +81,11 @@ public class Application {
     }
 
     public static void putJs(String where, String src,  String on, String code, boolean async, boolean defer, boolean mergeInSingleFile, boolean inline){
-        jsTags.put(where, src, on, code, async, defer, mergeInSingleFile, inline);
+        jsTags.save(where, src, on, code, async, defer, mergeInSingleFile, inline);
     }
 
     public static void putCss(String where, String src, String code, boolean mergeInSingleFile, boolean inline){
-        cssTags.put(where, src, code, mergeInSingleFile, inline);
+        cssTags.save(where, src, code, mergeInSingleFile, inline);
     }
 
     public static void clearResourcesHolders(){

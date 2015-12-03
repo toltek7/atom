@@ -57,31 +57,20 @@ public class JsCssManager {
      * async - async attribute of script
      * defer - defer attribute of script
      * mergeInSingleFile - if true, the script placed to the some common.js file and src link to this common.js file
+     * inline - if true js puts on page inline, no processing in manager
      */
-    public void put(String where, String src, String onEvent, String code, boolean async, boolean defer, boolean mergeInSingleFile, boolean inline) {
-
-        Map<String, boolean[]> attrSet = new LinkedHashMap<String, boolean[]>();
-        HashSet<String> codeSet = new HashSet<String>();
-
+    public void save(String where, String src, String onEvent, String code, boolean async, boolean defer, boolean mergeInSingleFile, boolean inline) {
+        
         //todo: default user values need to set
-        boolean[] attributes = new boolean[]{async, defer, mergeInSingleFile, inline};
-
-        if (srcHolder.containsKey(where)) attrSet = srcHolder.get(where);
-        if (attrSet.containsKey(src)){
-            boolean[]  array = attrSet.get(src);
-            attributes[2] = attributes[2] || array[2]; //merge attribute, if some script has it, others also should have it
-            attributes[3] = attributes[3] || array[3]; //inline attribute, if some script has it, others also should have it
-        }
-        attrSet.put(src, attributes);
+        boolean[] attr = new boolean[]{async, defer, mergeInSingleFile, inline};
+        attr = _saveSrc(src, attr,where);
         //process inline attribute, if it is true, means it is already on page, res from head and body should be removed
-        if(attributes[3]){
-          srcHolder.put("head", attrSet);
-          srcHolder.put("body", attrSet);
-        }else{
-          srcHolder.put(where, attrSet);
+        if(attr[3]){
+            _reWriteSrc(src, attr, _getAntiWhere(where));
         }
 
-
+        //save inline code, key=onEvent
+        HashSet<String> codeSet = new HashSet<String>();
         if (codeHolder.containsKey(onEvent)) codeSet = codeHolder.get(onEvent);
         codeSet.add(code);
         codeHolder.put(onEvent, codeSet);
@@ -91,8 +80,37 @@ public class JsCssManager {
     /**
      * put css
      * */
-    public void put(String where, String src, String code, boolean mergeInSingleFile, boolean inline) {
-        put(where, src, null, code, false, false, mergeInSingleFile, inline);
+    public void save(String where, String src, String code, boolean mergeInSingleFile, boolean inline) {
+        save(where, src, null, code, false, false, mergeInSingleFile, inline);
+    }
+
+
+    private boolean[] _saveSrc(String src, boolean[] attributes, String where){
+        Map<String, boolean[]> attrSet = new LinkedHashMap<String, boolean[]>();
+        if (srcHolder.containsKey(where)) attrSet = srcHolder.get(where);
+        if (attrSet.containsKey(src)){
+            boolean[]  array = attrSet.get(src);
+            attributes[2] = attributes[2] || array[2]; //merge attribute, if some script has it, others also should have it
+            attributes[3] = attributes[3] || array[3]; //inline attribute, if some script has it, others also should have it
+        }
+        attrSet.put(src, attributes);
+        srcHolder.put(where, attrSet);
+        return attributes;
+    }
+
+    //to fix problem with inline attribute
+    private void _reWriteSrc(String src, boolean[] attributes, String where){
+        Map<String, boolean[]> attrSet = new LinkedHashMap<String, boolean[]>();
+        if (srcHolder.containsKey(where)) attrSet = srcHolder.get(where);
+        if (attrSet.containsKey(src)){
+            attrSet.put(src, attributes);
+            srcHolder.put(where, attrSet);
+        }
+    }
+
+    private String _getAntiWhere(String where){
+        if(where.equals("head")) return "body";
+        return "head";
     }
 
     public void clear(){
@@ -106,7 +124,7 @@ public class JsCssManager {
     public String getHeadTags(String pagePath) {
         String result = collectTags("head", mergedHeadFile, pagePath);
         if(!Application.isProductionBuild) {
-            print(mergedSrcHolder);
+            Utils.print(srcHolder, "get head print ");
             writeMergedFile("head", mergedHeadFile, pagePath);
         }
         return result;
@@ -115,7 +133,7 @@ public class JsCssManager {
     public String getBodyTags(String pagePath) {
         String result = collectTags("body", mergedBodyFile, pagePath);
         if(!Application.isProductionBuild) {
-            print(mergedSrcHolder);
+            Utils.print(srcHolder, "get head print ");
             writeMergedFile("body", mergedBodyFile, pagePath);
         }
         return result;
@@ -287,29 +305,34 @@ public class JsCssManager {
     }
 
     private void sortTags(String key, Set<String> orderedList){
-        Map<String, boolean[]> sortedMap = new LinkedHashMap<String, boolean[]>();
         Map<String, boolean[]> curMap = srcHolder.get(key);
         if(curMap == null || curMap.isEmpty()) return;
+        Map<String, boolean[]> sortedMap = new LinkedHashMap<String, boolean[]>();
+        //firstly detect src that not in order list, but on page (example external scripts)
+        String src;
+        Iterator<Map.Entry<String, boolean[]>> iter = curMap.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<String, boolean[]> entry = iter.next();
+            src = entry.getKey();
+            Utils.print("---" + src);
+            if(!orderedList.contains(src)){
+                Utils.print("---" + src);
+                sortedMap.put(src,entry.getValue());
+                iter.remove(); //remove it from future analization
+            }
+        }
+        //now sort other src
         for(String s : orderedList){
             if(curMap.containsKey(s)){
                 sortedMap.put(s,curMap.get(s));
             }
         }
+        //rewrite main holder
         if(!sortedMap.isEmpty()){
             srcHolder.put(key,sortedMap);
         }
-    }
 
-    public void print(Map<String, Map<String, boolean[]>> map) {
-        boolean[] array;
-        for (Map.Entry were : map.entrySet()) {
-            System.out.println(were.getKey() + " scripts:");
-            for (Map.Entry src : ((Map<String, boolean[]>) were.getValue()).entrySet()) {
-                array = (boolean[]) src.getValue();
-                System.out.println("   " + src.getKey());
-                System.out.println("      " + array[0] + " " + array[1] + " " + array[2] + " " + array[3]);
-            }
-        }
+        Utils.print(srcHolder, "sorted print ");
     }
 
 }
