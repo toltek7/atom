@@ -6,10 +6,7 @@ import com.google.common.io.Files;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.StandardOpenOption;
@@ -157,8 +154,26 @@ public class FileManager {
         try {
             FileUtils.forceDelete(new File(file));
         } catch (IOException e) {
-            System.out.println("Error[FileManager]: " + file + " can't be removed. " + e);
+            System.out.println("Warning[FileManager]: " + file + " can't be removed. " + e);
         }
+    }
+
+    public static String readFile(String path) throws IOException {
+        String content = "";
+        BufferedReader br = new BufferedReader(new FileReader(path));
+        try {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+            while (line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                line = br.readLine();
+            }
+            content = sb.toString();
+        } finally {
+            br.close();
+        }
+        return content;
     }
 
 }

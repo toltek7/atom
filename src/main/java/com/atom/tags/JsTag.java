@@ -2,6 +2,7 @@ package com.atom.tags;
 
 import com.atom.Application;
 import com.atom.Constants;
+import com.atom.release.FileManager;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -20,7 +21,8 @@ public class JsTag extends SimpleTagSupport {
 
     private String src = "default.js";
     private String where = "body";
-    private String on = "ready";
+    private String on = "";
+    private String code = "";
     private Boolean async = false;
     private Boolean defer = false;
     private Boolean merge = false;
@@ -30,26 +32,17 @@ public class JsTag extends SimpleTagSupport {
     @Override
     public void doTag() throws JspException, IOException {
 
-        JspWriter out = getJspContext().getOut();
         JspFragment body = getJspBody();
         StringWriter code = new StringWriter();
 
         if (body != null) body.invoke(code);
 
-        String processedCode = this.processCode(code);
+        this.code = this.processCode(code);
 
-        if (this.where.equals("inline")) {
-            if (!processedCode.isEmpty()) {
-                out.write(String.format(Constants.SCRIPT_TAG_TEMPLATE, processedCode));
-                this.async = false;
-                this.defer = false;
-                processedCode = null;
-            }
-            this.where = "head";
-        }
-        printInputs("");
-        Application.putJs(this.where, this.src, this.on, processedCode, this.async, this.defer, this.merge);
-        //out.write("<div> JS tag: " + this.src + "</div>");
+        validateInputs();
+
+        Application.putJs(this.where, this.src, this.on, this.code, this.async, this.defer, this.merge, this.inline);
+
     }
 
     public void setSrc(String src) {
@@ -59,7 +52,6 @@ public class JsTag extends SimpleTagSupport {
     public void setWhere(String where) {
         switch (where) {
             case "head":
-            case "inline":
                 this.where = where;
                 break;
             default:
@@ -71,6 +63,11 @@ public class JsTag extends SimpleTagSupport {
     public void setOn(String on) {
         if (isBlank(on)) return;
         this.on = on;
+    }
+
+    public void setCode(String code) {
+        if (isBlank(on)) return;
+        this.code = code;
     }
 
     public void setAsync(Boolean async) {
@@ -92,6 +89,35 @@ public class JsTag extends SimpleTagSupport {
     public String processCode(StringWriter code) {
         if (code == null) return null;
         return code.toString().replaceAll("\\s", " ").trim();
+    }
+
+    public void validateInputs() throws IOException {
+
+        JspWriter out = getJspContext().getOut();
+
+        //script should be added to the page inline, all others attributes not make force
+        if (this.inline) {
+            String content = FileManager.readFile(Application.root + "/" + this.src) + this.code;
+            if (!content.isEmpty()) {
+                out.write(String.format(Constants.SCRIPT_TAG_TEMPLATE, content));
+                this.code = null;
+            }
+            //printInputs("");
+        }
+
+        //defer has more force
+        if (this.defer) this.async = false;
+
+        //-on+code = code to the page
+        if (this.on.isEmpty() && !this.code.isEmpty()) {//if we have a code inside and on = ""
+            out.write(String.format(Constants.SCRIPT_TAG_TEMPLATE, this.code));
+            this.async = false;
+            this.defer = false;
+            this.where = "head";
+            this.code = null;
+        }
+
+        //printInputs("");
     }
 
     private void printInputs(String code) {

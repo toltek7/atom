@@ -44,7 +44,7 @@ public class CssTag extends SimpleTagSupport {
             this.where = "head";
         }
 
-        Application.putCss(this.where, this.src, processedCode, this.merge);
+        Application.putCss(this.where, this.src, processedCode, this.merge, false);
 //        out.write("<div> CSS tag: " + this.src + "</div>");
 
     }

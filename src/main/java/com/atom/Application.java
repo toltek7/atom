@@ -80,12 +80,12 @@ public class Application {
         return isProductionBuild;
     }
 
-    public static void putJs(String where, String src,  String on, String code, boolean async, boolean defer, boolean mergeInSingleFile){
-        jsTags.put(where, src, on, code, async, defer, mergeInSingleFile);
+    public static void putJs(String where, String src,  String on, String code, boolean async, boolean defer, boolean mergeInSingleFile, boolean inline){
+        jsTags.put(where, src, on, code, async, defer, mergeInSingleFile, inline);
     }
 
-    public static void putCss(String where, String src, String code, boolean mergeInSingleFile){
-        cssTags.put(where, src, code, mergeInSingleFile);
+    public static void putCss(String where, String src, String code, boolean mergeInSingleFile, boolean inline){
+        cssTags.put(where, src, code, mergeInSingleFile, inline);
     }
 
     public static void clearResourcesHolders(){
@@ -132,7 +132,7 @@ public class Application {
     }
 
     public static void printJsTags(){
-        jsTags.print();
+//        jsTags.print();
     }
     
 

@@ -58,22 +58,29 @@ public class JsCssManager {
      * defer - defer attribute of script
      * mergeInSingleFile - if true, the script placed to the some common.js file and src link to this common.js file
      */
-    public void put(String where, String src, String onEvent, String code, boolean async, boolean defer, boolean mergeInSingleFile) {
+    public void put(String where, String src, String onEvent, String code, boolean async, boolean defer, boolean mergeInSingleFile, boolean inline) {
 
         Map<String, boolean[]> attrSet = new LinkedHashMap<String, boolean[]>();
         HashSet<String> codeSet = new HashSet<String>();
 
         //todo: default user values need to set
-        boolean[] attributes = new boolean[]{async, defer, mergeInSingleFile, false};
+        boolean[] attributes = new boolean[]{async, defer, mergeInSingleFile, inline};
 
         if (srcHolder.containsKey(where)) attrSet = srcHolder.get(where);
         if (attrSet.containsKey(src)){
             boolean[]  array = attrSet.get(src);
             attributes[2] = attributes[2] || array[2]; //merge attribute, if some script has it, others also should have it
-            attributes[3] = attributes[3] || array[3]; //onPage attribute, if some script has it, others also should have it
+            attributes[3] = attributes[3] || array[3]; //inline attribute, if some script has it, others also should have it
         }
         attrSet.put(src, attributes);
-        srcHolder.put(where, attrSet);
+        //process inline attribute, if it is true, means it is already on page, res from head and body should be removed
+        if(attributes[3]){
+          srcHolder.put("head", attrSet);
+          srcHolder.put("body", attrSet);
+        }else{
+          srcHolder.put(where, attrSet);
+        }
+
 
         if (codeHolder.containsKey(onEvent)) codeSet = codeHolder.get(onEvent);
         codeSet.add(code);
@@ -84,8 +91,8 @@ public class JsCssManager {
     /**
      * put css
      * */
-    public void put(String where, String src, String code, boolean mergeInSingleFile) {
-        put(where, src, null, code, false, false, mergeInSingleFile);
+    public void put(String where, String src, String code, boolean mergeInSingleFile, boolean inline) {
+        put(where, src, null, code, false, false, mergeInSingleFile, inline);
     }
 
     public void clear(){
@@ -99,6 +106,7 @@ public class JsCssManager {
     public String getHeadTags(String pagePath) {
         String result = collectTags("head", mergedHeadFile, pagePath);
         if(!Application.isProductionBuild) {
+            print(mergedSrcHolder);
             writeMergedFile("head", mergedHeadFile, pagePath);
         }
         return result;
@@ -107,6 +115,7 @@ public class JsCssManager {
     public String getBodyTags(String pagePath) {
         String result = collectTags("body", mergedBodyFile, pagePath);
         if(!Application.isProductionBuild) {
+            print(mergedSrcHolder);
             writeMergedFile("body", mergedBodyFile, pagePath);
         }
         return result;
@@ -134,12 +143,23 @@ public class JsCssManager {
         Iterator<Map.Entry<String, boolean[]>> iter = srcMap.entrySet().iterator();
         while (iter.hasNext()) {
             Map.Entry<String, boolean[]> entry = iter.next();
+
+            array = (boolean[]) entry.getValue();
+
+            if(array[3]){
+                //inline code, already added on page in JsTag -> nothing to do
+                //print(srcHolder);
+                iter.remove();
+                //print(srcHolder);
+                continue;
+            }
+
             src = (String) entry.getKey();
+
+
 
             //NOTE: check whether we have such script in head
             if(isHeadTag || !(srcInHead != null && srcInHead.containsKey(src))){
-
-                array = (boolean[]) entry.getValue();
 
                 attribute = "";
 
@@ -280,14 +300,14 @@ public class JsCssManager {
         }
     }
 
-    public void print() {
+    public void print(Map<String, Map<String, boolean[]>> map) {
         boolean[] array;
-        for (Map.Entry were : this.srcHolder.entrySet()) {
+        for (Map.Entry were : map.entrySet()) {
             System.out.println(were.getKey() + " scripts:");
             for (Map.Entry src : ((Map<String, boolean[]>) were.getValue()).entrySet()) {
                 array = (boolean[]) src.getValue();
                 System.out.println("   " + src.getKey());
-                System.out.println("      " + array[0] + " " + array[1] + " " + array[2] + " ");
+                System.out.println("      " + array[0] + " " + array[1] + " " + array[2] + " " + array[3]);
             }
         }
     }
