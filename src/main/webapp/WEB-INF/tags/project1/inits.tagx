@@ -37,14 +37,14 @@
                 console.log("111 777");
             </atom:js>
 
-            <atom:js src="tests/js/test-7.js" where="body" on="customevent" async="true" defer="true" merge="true"/>
+            <atom:js src="tests/js/test-7.js" where="body"  merge="true"/>
 
             <!--<script src="js/test1.js"></script>-->
         </c:when>
 
 
         <c:when test="${name == 'test7'}">
-            <atom:js src="tests/js/test-7.js" inline="true" where="head" on="customevent" async="true" defer="true" merge="true">
+            <atom:js src="tests/js/test-7.js" inline="true">
                 console.log("test7 inline code");
             </atom:js>
         </c:when>

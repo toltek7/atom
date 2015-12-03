@@ -1,0 +1,14 @@
+#test-js{
+    border:1px solid red;
+    min-width: 600px;
+    min-height: 100px;
+    margin: 0 auto;
+}
+
+.error{
+    color: red;
+}
+.success{
+    color: green;
+}
+

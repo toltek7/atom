@@ -1,15 +1,18 @@
 <atom:page xmlns:atom="http://atom.com"
-           xmlns:test="urn:jsptagdir:/WEB-INF/tags/test"
-           xmlns:utils="urn:jsptagdir:/WEB-INF/tags/utils">
+           xmlns:test="urn:jsptagdir:/WEB-INF/tags/test">
     <html xmlns="http://www.w3.org/1999/xhtml" lang="ru">
     <head>
         <title>Project1</title>
-        <atom:js src="project1/js/external/jquery-2.1.4.js"/>
+        <atom:css src="tests/css/test.css"/>
+        <atom:js src="project1/js/external/jquery-2.1.4.js" where="head"/>
+        <atom:js src="tests/js/test-main.js" where="body"/>
         <!--<link rel="stylesheet" type="text/css" href="css/project1.css"/>-->
         <!--<script type="text/javascript" src="js/project1.js"></script>-->
     </head>
     <body>
     <div class="body">
+        <div id="test-js"></div>
+        <div id="report"></div>
         <h1>test JS order 3-1-2</h1>
         <test:tag1/>
         <test:tag2/>
@@ -18,6 +21,8 @@
         <test:tag5/>
         <test:tag6/>
         <test:tag7/>
+
+
     </div>
 
     </body>

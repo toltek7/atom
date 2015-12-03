@@ -100,7 +100,7 @@ public class JsTag extends SimpleTagSupport {
             String content = FileManager.readFile(Application.root + "/" + this.src) + this.code;
             if (!content.isEmpty()) {
                 out.write(String.format(Constants.SCRIPT_TAG_TEMPLATE, content));
-                this.code = null;
+                this.code = "";
             }
             //print();
         }
