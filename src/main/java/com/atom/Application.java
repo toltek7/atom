@@ -120,8 +120,8 @@ public class Application {
 
     public static void streamlineResourcesOrder(){
         if(!srcOrder.isEmpty()){
-            jsTags.sortByInitTagOrder(srcOrder.js);
-            cssTags.sortByInitTagOrder(srcOrder.css);
+            jsTags.sort(srcOrder.js);
+            cssTags.sort(srcOrder.css);
         }
     }
 

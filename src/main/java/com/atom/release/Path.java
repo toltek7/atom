@@ -93,7 +93,7 @@ public class Path {
      * if pagePath = /project/*.../page.html -> mergedJsPath = project/js/name
      * if pagePath = /page.html -> mergedJsPath = /js/name
      * the same works for CSS
-     * NOTE: 100% works only for single page, fro pro build need to check
+     * NOTE: 100% works only for single page, fro pro build need to check (as in build can be different root projects)
      */
     public static String getMergedFilePath(String name, String pagePath){
         String[] parts = pagePath.split("/");

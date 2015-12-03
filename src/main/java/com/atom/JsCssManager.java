@@ -1,12 +1,8 @@
 package com.atom;
 
 import com.atom.release.FileManager;
-import com.atom.release.Page;
 import com.atom.release.Path;
 import com.atom.release.Utils;
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -26,8 +22,8 @@ import java.util.*;
  * 2. window.onload or any other custom event
  * 3. immediately at the page placement (like inline)
  * <p>
- * NOTE: if <js></js> executes on "inline", than src placed on <head></head> automatically + dropped async and defer params
- * NOTE: html <script></script> is also supported but not processed thru this code
+ * NOTE: if <js></js> executes on "inline" (+code -on), than src placed on <head></head> automatically + dropped async and defer params
+ * NOTE: html <script></script> also can be used, but will not be collected in delivery
  */
 //enum tagType { JS_HEAD, JS_BODY, CSS_HEAD, CSS_BODY}
 public class JsCssManager {
@@ -38,15 +34,12 @@ public class JsCssManager {
     private String tagTemplate, mergedHeadFile, mergedBodyFile;
 
     protected JsCssManager(String tagTemplate, String headFile, String bodyFile) {
-
-        this.srcHolder = new LinkedHashMap<String, Map<String, boolean[]>>();
-        this.mergedSrcHolder = new LinkedHashMap<String, Map<String, boolean[]>>();
-        this.codeHolder = new LinkedHashMap<String, HashSet>();
-
+        this.srcHolder = new LinkedHashMap<>();
+        this.mergedSrcHolder = new LinkedHashMap<>();
+        this.codeHolder = new LinkedHashMap<>();
         this.tagTemplate = tagTemplate;
         this.mergedHeadFile = headFile;
         this.mergedBodyFile = bodyFile;
-
     }
 
     /**
@@ -60,21 +53,17 @@ public class JsCssManager {
      * inline - if true js puts on page inline, no processing in manager
      */
     public void save(String where, String src, String onEvent, String code, boolean async, boolean defer, boolean mergeInSingleFile, boolean inline) {
-        
-        //todo: default user values need to set
         boolean[] attr = new boolean[]{async, defer, mergeInSingleFile, inline};
         attr = _saveSrc(src, attr,where);
         //process inline attribute, if it is true, means it is already on page, res from head and body should be removed
         if(attr[3]){
             _reWriteSrc(src, attr, _getAntiWhere(where));
         }
-
         //save inline code, key=onEvent
-        HashSet<String> codeSet = new HashSet<String>();
+        HashSet<String> codeSet = new HashSet<>();
         if (codeHolder.containsKey(onEvent)) codeSet = codeHolder.get(onEvent);
         codeSet.add(code);
         codeHolder.put(onEvent, codeSet);
-
     }
 
     /**
@@ -84,9 +73,8 @@ public class JsCssManager {
         save(where, src, null, code, false, false, mergeInSingleFile, inline);
     }
 
-
     private boolean[] _saveSrc(String src, boolean[] attributes, String where){
-        Map<String, boolean[]> attrSet = new LinkedHashMap<String, boolean[]>();
+        Map<String, boolean[]> attrSet = new LinkedHashMap<>();
         if (srcHolder.containsKey(where)) attrSet = srcHolder.get(where);
         if (attrSet.containsKey(src)){
             boolean[]  array = attrSet.get(src);
@@ -100,7 +88,7 @@ public class JsCssManager {
 
     //to fix problem with inline attribute
     private void _reWriteSrc(String src, boolean[] attributes, String where){
-        Map<String, boolean[]> attrSet = new LinkedHashMap<String, boolean[]>();
+        Map<String, boolean[]> attrSet = new LinkedHashMap<>();
         if (srcHolder.containsKey(where)) attrSet = srcHolder.get(where);
         if (attrSet.containsKey(src)){
             attrSet.put(src, attributes);
@@ -116,201 +104,151 @@ public class JsCssManager {
     public void clear(){
         srcHolder.clear();
         codeHolder.clear();
-        if(!Application.isProductionBuild){ //if production build, we store all merged files from all pages
-            mergedSrcHolder.clear();
+        if(!Application.isProductionBuild){ //if production build, we store all merged files from all pages and only after build finished, clear it.
+            clearMergedData();
         }
     }
 
+    public void clearMergedData(){
+        mergedSrcHolder.clear();
+    }
+
     public String getHeadTags(String pagePath) {
-        String result = collectTags("head", mergedHeadFile, pagePath);
+        String result = getTags("head", mergedHeadFile, pagePath);
         if(!Application.isProductionBuild) {
-            Utils.print(srcHolder, "get head print ");
+            //Utils.print(srcHolder, "get head print ");
             writeMergedFile("head", mergedHeadFile, pagePath);
         }
         return result;
     }
 
     public String getBodyTags(String pagePath) {
-        String result = collectTags("body", mergedBodyFile, pagePath);
+        String result = getTags("body", mergedBodyFile, pagePath);
         if(!Application.isProductionBuild) {
-            Utils.print(srcHolder, "get head print ");
+            //Utils.print(srcHolder, "get head print ");
             writeMergedFile("body", mergedBodyFile, pagePath);
         }
         return result;
     }
 
-
-    public String collectTags(String were, String mergedFile, String currentPagePath)  {
-
-       // tagType type = collectType(were, tagTemplate);
-
-        Boolean isHeadTag = were.equals("head");
-
-        Map<String, boolean[]> srcMap = srcHolder.get(were),
+    private String getTags(String where, String mergedFile, String currentPagePath)  {
+        Boolean isHeadTag = where.equals("head");
+        Map<String, boolean[]> srcMap = srcHolder.get(where),
                                srcInHead = srcHolder.get("head");
-
         if(srcMap == null || srcMap.isEmpty()) return null;
-
         String attribute, src;
         StringBuilder tags = new StringBuilder();
         boolean[] array;
+        boolean mergedFileAdded = false; //indicate id merged tag already added to the page
 
-        boolean mergedFileAdded = false;
-
-       // print();
         Iterator<Map.Entry<String, boolean[]>> iter = srcMap.entrySet().iterator();
         while (iter.hasNext()) {
             Map.Entry<String, boolean[]> entry = iter.next();
-
-            array = (boolean[]) entry.getValue();
-
+            array = entry.getValue();
             if(array[3]){
-                //inline code, already added on page in JsTag -> nothing to do
-                //print(srcHolder);
+                //inline code, already added on page in JsTag -> nothing to do, remove this src
                 iter.remove();
-                //print(srcHolder);
                 continue;
             }
-
-            src = (String) entry.getKey();
-
-
-
+            src =  entry.getKey();
             //NOTE: check whether we have such script in head
             if(isHeadTag || !(srcInHead != null && srcInHead.containsKey(src))){
-
+                //set async or defer attr, defer has more force
                 attribute = "";
-
                 if (array[0])        attribute = "async=''";
-
                 else if (array[1])   attribute = "defer=''";
-
                 if(!array[2]){//not mergeInSingleFile
-
                     Path path = new Path(src,currentPagePath);
                     tags.append(String.format(tagTemplate, path.relatedPath, attribute));
                     //Utils.print("currentPagePath: " + currentPagePath);
                     //Utils.print("path.relatedPath: " + path.relatedPath);
                     //Utils.print(String.format(tagTemplate, path.relatedPath, attribute));
-                    iter.remove();
+                    iter.remove();// remove it to not store in merged holder
                     if(Application.isProductionBuild){
                         //todo: save file to delivery folder if it is not exist in it
                     }
-
                 }
                 else{
                     //can be 2 merged files - in head and in body
                     if(!mergedFileAdded){
                         mergedFileAdded = true;
+                        //todo not clear what to do in delivery, can be a problems
                         String mergedFilePath = Path.getMergedFilePath(mergedFile, currentPagePath);
                         Path path = new Path(mergedFilePath,currentPagePath);
                         tags.append(String.format(tagTemplate, path.relatedPath, ""));
                     }
-                    //todo need to check in delivery
                 }
             }else{
                 iter.remove(); // mean that it is body iteration and such file already exist in head
             }
         }
-
-        mergedSrcHolder.put(were,srcMap); // store for delivery, when we need full list of files
-
+        mergedSrcHolder.put(where,srcMap); // store for delivery, when we need full list of files
         return tags.toString();
     }
 
     public void writeMergedFile(String were, String mergedFile, String currentPagePath) {
-
         Map<String, boolean[]> srcMap = mergedSrcHolder.get(were);
         if(srcMap == null || srcMap.isEmpty()) return;
-        Iterator<Map.Entry<String, boolean[]>> iter = srcMap.entrySet().iterator();
 
         String mergedFilePath;
-
         if(Application.isProductionBuild){
             mergedFilePath = Application.root + Application.deliveryPath + Application.projectFolder + mergedFile;
-            //.getMergedFilePath(mergedFile, currentPagePath);
-
         }else{
             mergedFilePath = Application.root + Path.getMergedFilePath(mergedFile, currentPagePath);
         }
-
-        //Path path = new Path(mergedFilePath,currentPagePath);
-       // tags.append(String.format(tagTemplate, path.relatedPath, ""));
-        System.out.println("Application.root + mergedFilePath");
-        System.out.println(mergedFilePath);
-
         FileManager.removeFile(mergedFilePath);
-
+        Iterator<Map.Entry<String, boolean[]>> iter = srcMap.entrySet().iterator();
         while (iter.hasNext()) {
             Map.Entry<String, boolean[]> entry = iter.next();
-            String src = (String) entry.getKey();
+            String src = entry.getKey();
             try {
                 FileManager.appendToFile(Application.root + src, mergedFilePath);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
-
-
-        //Application.isProductionBuild
-        //return collectTags("body", mergedBodyFile, pagePath);
     }
 
-
     public String getInlineCode() {
-
         StringBuilder finalCode = new StringBuilder(),
                       mergedCode = new StringBuilder();
         String onEvent, inlineCode;
         Iterator iterator;
-
         for (Map.Entry entry : codeHolder.entrySet()) {
-
             mergedCode.setLength(0);
             mergedCode.trimToSize();
             onEvent = (String) entry.getKey();
             iterator = ((HashSet) entry.getValue()).iterator();
-
             while (iterator.hasNext()) {
                 inlineCode = (String) iterator.next();
                 if (inlineCode != null && !inlineCode.isEmpty()) mergedCode.append(inlineCode.trim());
             }
-
             switch (onEvent) {
                 case "ready":
                 case "":     finalCode.append(String.format(Constants.JS_ONREADY_TEMPLATE, mergedCode)); break;
                 case "load": finalCode.append(String.format(Constants.JS_ONLOAD_TEMPLATE, mergedCode));  break;
                 default:     finalCode.append(String.format(Constants.JS_CUSTOM_TEMPLATE, onEvent, mergedCode));
             }
-
         }
-
         if (finalCode.length() > 0) {
             return String.format(Constants.SCRIPT_TAG_TEMPLATE, finalCode.toString()) + "\n";
         }
-
         return "";
     }
 
-
-
-    public void sortByInitTagOrder(Set<String> orderedList){
-        if(orderedList == null ||  orderedList.isEmpty()) return;
-        //print();
-        //Utils.print("===============================sortByInitTagOrder");
-        sortTags("head",orderedList);
-        sortTags("body",orderedList);
-        //print();
+    public void sort(Set<String> orderedList){
+        if(orderedList == null ||  orderedList.isEmpty()) return;  
+        sortSrcByOrder("head", orderedList);
+        sortSrcByOrder("body", orderedList);
     }
 
-    private void sortTags(String key, Set<String> orderedList){
-        Map<String, boolean[]> curMap = srcHolder.get(key);
-        if(curMap == null || curMap.isEmpty()) return;
-        Map<String, boolean[]> sortedMap = new LinkedHashMap<String, boolean[]>();
+    private void sortSrcByOrder(String key, Set<String> orderedList){
+        Map<String, boolean[]> srcMap = srcHolder.get(key);
+        if(srcMap == null || srcMap.isEmpty()) return;
+        Map<String, boolean[]> sortedMap = new LinkedHashMap<>();
         //firstly detect src that not in order list, but on page (example external scripts)
         String src;
-        Iterator<Map.Entry<String, boolean[]>> iter = curMap.entrySet().iterator();
+        Iterator<Map.Entry<String, boolean[]>> iter = srcMap.entrySet().iterator();
         while (iter.hasNext()) {
             Map.Entry<String, boolean[]> entry = iter.next();
             src = entry.getKey();
@@ -323,16 +261,15 @@ public class JsCssManager {
         }
         //now sort other src
         for(String s : orderedList){
-            if(curMap.containsKey(s)){
-                sortedMap.put(s,curMap.get(s));
+            if(srcMap.containsKey(s)){
+                sortedMap.put(s,srcMap.get(s));
             }
         }
         //rewrite main holder
         if(!sortedMap.isEmpty()){
             srcHolder.put(key,sortedMap);
         }
-
-        Utils.print(srcHolder, "sorted print ");
+        //Utils.print(srcHolder, "sorted print ");
     }
 
 }
