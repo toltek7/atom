@@ -5,8 +5,7 @@
 
     <!--<jsp:directive.attribute name="path"/>-->
     <jsp:directive.attribute name="name"/>
-    ${pageContext.request.contextPath}
-inits 7777777777777777777777777777777777777777777
+    <!--${pageContext.request.contextPath}-->
     <c:choose>
         <c:when test="${name == 'test2'}">
             <!--<atom:css src="project2/css/2.css"/>-->
