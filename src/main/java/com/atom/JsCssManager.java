@@ -1,13 +1,17 @@
 package com.atom;
 
+import com.atom.release.FileManager;
 import com.atom.release.Page;
 import com.atom.release.Path;
 import com.atom.release.Utils;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
- * Created by toltek77 on 13.01.2015.
+ * Created by toltek7 on 13.01.2015.
  * <p>
  * by using <js></js> tag we collect all scripts in page and put them
  * (already filtered by inits's file order and unique value) in HTML
@@ -25,16 +29,24 @@ import java.util.*;
  * NOTE: if <js></js> executes on "inline", than src placed on <head></head> automatically + dropped async and defer params
  * NOTE: html <script></script> is also supported but not processed thru this code
  */
+//enum tagType { JS_HEAD, JS_BODY, CSS_HEAD, CSS_BODY}
 public class JsCssManager {
 
-    private Map<String, Map<String, boolean[]>> srcHolder;
+    //NOTE: in mergedSrcHolder store files that should be merged in one, after all parsings complited
+    private Map<String, Map<String, boolean[]>> srcHolder, mergedSrcHolder;
     private Map<String, HashSet> codeHolder;
-    private boolean isSorted; //indicated whether we sorted src by inits.tag order
+    private String tagTemplate, mergedHeadFile, mergedBodyFile;
 
-    protected JsCssManager() {
+    protected JsCssManager(String tagTemplate, String headFile, String bodyFile) {
+
         this.srcHolder = new LinkedHashMap<String, Map<String, boolean[]>>();
+        this.mergedSrcHolder = new LinkedHashMap<String, Map<String, boolean[]>>();
         this.codeHolder = new LinkedHashMap<String, HashSet>();
-        this.isSorted = false;
+
+        this.tagTemplate = tagTemplate;
+        this.mergedHeadFile = headFile;
+        this.mergedBodyFile = bodyFile;
+
     }
 
     /**
@@ -52,17 +64,20 @@ public class JsCssManager {
         HashSet<String> codeSet = new HashSet<String>();
 
         //todo: default user values need to set
-        boolean[] attributes = new boolean[]{async, defer, mergeInSingleFile};
+        boolean[] attributes = new boolean[]{async, defer, mergeInSingleFile, false};
 
         if (srcHolder.containsKey(where)) attrSet = srcHolder.get(where);
+        if (attrSet.containsKey(src)){
+            boolean[]  array = attrSet.get(src);
+            attributes[2] = attributes[2] || array[2]; //merge attribute, if some script has it, others also should have it
+            attributes[3] = attributes[3] || array[3]; //onPage attribute, if some script has it, others also should have it
+        }
         attrSet.put(src, attributes);
         srcHolder.put(where, attrSet);
 
         if (codeHolder.containsKey(onEvent)) codeSet = codeHolder.get(onEvent);
         codeSet.add(code);
         codeHolder.put(onEvent, codeSet);
-
-        isSorted = false;
 
     }
 
@@ -73,58 +88,137 @@ public class JsCssManager {
         put(where, src, null, code, false, false, mergeInSingleFile);
     }
 
-    public void clean(){
+    public void clear(){
         srcHolder.clear();
         codeHolder.clear();
-        isSorted = false;
+        if(!Application.isProductionBuild){ //if production build, we store all merged files from all pages
+            mergedSrcHolder.clear();
+        }
     }
 
-    public String getHeadTags(String tagTemplate, String pagePath) {
-        return collectTags(tagTemplate, "head", pagePath);
+    public String getHeadTags(String pagePath) {
+        String result = collectTags("head", mergedHeadFile, pagePath);
+        if(!Application.isProductionBuild) {
+            writeMergedFile("head", mergedHeadFile, pagePath);
+        }
+        return result;
     }
 
-    public String getBodyTags(String tagTemplate, String pagePath) {
-        return collectTags(tagTemplate, "body", pagePath);
+    public String getBodyTags(String pagePath) {
+        String result = collectTags("body", mergedBodyFile, pagePath);
+        if(!Application.isProductionBuild) {
+            writeMergedFile("body", mergedBodyFile, pagePath);
+        }
+        return result;
     }
 
 
-    private String collectTags(String tagTemplate, String were, String currentPagePath) {
+    public String collectTags(String were, String mergedFile, String currentPagePath)  {
+
+       // tagType type = collectType(were, tagTemplate);
+
+        Boolean isHeadTag = were.equals("head");
+
         Map<String, boolean[]> srcMap = srcHolder.get(were),
                                srcInHead = srcHolder.get("head");
 
         if(srcMap == null || srcMap.isEmpty()) return null;
 
         String attribute, src;
-        StringBuilder scripts = new StringBuilder();
+        StringBuilder tags = new StringBuilder();
         boolean[] array;
 
-        for (Map.Entry entry : srcMap.entrySet()) {
+        boolean mergedFileAdded = false;
+
+       // print();
+        Iterator<Map.Entry<String, boolean[]>> iter = srcMap.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<String, boolean[]> entry = iter.next();
             src = (String) entry.getKey();
 
             //NOTE: check whether we have such script in head
-            if(were.equals("head") || !(srcInHead != null && srcInHead.containsKey(src))){
+            if(isHeadTag || !(srcInHead != null && srcInHead.containsKey(src))){
+
                 array = (boolean[]) entry.getValue();
+
                 attribute = "";
+
                 if (array[0])        attribute = "async=''";
+
                 else if (array[1])   attribute = "defer=''";
-                if (!array[2]) {//not mergeInSingleFile
+
+                if(!array[2]){//not mergeInSingleFile
+
                     Path path = new Path(src,currentPagePath);
-                    scripts.append(String.format(tagTemplate, path.relatedPath, attribute));
+                    tags.append(String.format(tagTemplate, path.relatedPath, attribute));
                     //Utils.print("currentPagePath: " + currentPagePath);
                     //Utils.print("path.relatedPath: " + path.relatedPath);
                     //Utils.print(String.format(tagTemplate, path.relatedPath, attribute));
-                }
-                else {
-                    //todo merge scrip in common file
-                }
+                    iter.remove();
+                    if(Application.isProductionBuild){
+                        //todo: save file to delivery folder if it is not exist in it
+                    }
 
+                }
+                else{
+                    //can be 2 merged files - in head and in body
+                    if(!mergedFileAdded){
+                        mergedFileAdded = true;
+                        String mergedFilePath = Path.getMergedFilePath(mergedFile, currentPagePath);
+                        Path path = new Path(mergedFilePath,currentPagePath);
+                        tags.append(String.format(tagTemplate, path.relatedPath, ""));
+                    }
+                    //todo need to check in delivery
+                }
+            }else{
+                iter.remove(); // mean that it is body iteration and such file already exist in head
             }
+        }
 
+        mergedSrcHolder.put(were,srcMap); // store for delivery, when we need full list of files
+
+        return tags.toString();
+    }
+
+    public void writeMergedFile(String were, String mergedFile, String currentPagePath) {
+
+        Map<String, boolean[]> srcMap = mergedSrcHolder.get(were);
+        if(srcMap == null || srcMap.isEmpty()) return;
+        Iterator<Map.Entry<String, boolean[]>> iter = srcMap.entrySet().iterator();
+
+        String mergedFilePath;
+
+        if(Application.isProductionBuild){
+            mergedFilePath = Application.root + Application.deliveryPath + Application.projectFolder + mergedFile;
+            //.getMergedFilePath(mergedFile, currentPagePath);
+
+        }else{
+            mergedFilePath = Application.root + Path.getMergedFilePath(mergedFile, currentPagePath);
+        }
+
+        //Path path = new Path(mergedFilePath,currentPagePath);
+       // tags.append(String.format(tagTemplate, path.relatedPath, ""));
+        System.out.println("Application.root + mergedFilePath");
+        System.out.println(mergedFilePath);
+
+        FileManager.removeFile(mergedFilePath);
+
+        while (iter.hasNext()) {
+            Map.Entry<String, boolean[]> entry = iter.next();
+            String src = (String) entry.getKey();
+            try {
+                FileManager.appendToFile(Application.root + src, mergedFilePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
 
-        return scripts.toString();
+
+        //Application.isProductionBuild
+        //return collectTags("body", mergedBodyFile, pagePath);
     }
+
 
     public String getInlineCode() {
 
@@ -164,12 +258,12 @@ public class JsCssManager {
 
 
     public void sortByInitTagOrder(Set<String> orderedList){
-        if(isSorted || orderedList == null ||  orderedList.isEmpty()) return;
+        if(orderedList == null ||  orderedList.isEmpty()) return;
         //print();
+        //Utils.print("===============================sortByInitTagOrder");
         sortTags("head",orderedList);
         sortTags("body",orderedList);
         //print();
-        isSorted = true;
     }
 
     private void sortTags(String key, Set<String> orderedList){

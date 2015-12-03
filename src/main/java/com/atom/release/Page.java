@@ -44,6 +44,7 @@ public class Page {
         this.language           = language;
         this.releaseProcessor   = releaseProcessor;
 
+        //todo out timeStemp to delivery level
         if(releaseProcessor.setTimeStamp){
             this.timeStamp      = "_ts=" + Long.toString(System.currentTimeMillis());
         }

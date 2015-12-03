@@ -33,9 +33,6 @@ public class JsCssRequestListener implements  ServletRequestListener {
     public void requestDestroyed(ServletRequestEvent event) {
         Application.clearRequest();
         System.out.println("requestDestroyed JsCssRequestListener");
-        if(!Application.isProductionBuild){
-            Application.removeResourceTags();
-            Application.cleanInitsFilesOrder();
-        }
+
     }
 }

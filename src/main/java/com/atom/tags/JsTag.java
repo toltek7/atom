@@ -24,6 +24,7 @@ public class JsTag extends SimpleTagSupport {
     private Boolean async = false;
     private Boolean defer = false;
     private Boolean merge = false;
+    private Boolean inline = false;
 
 
     @Override
@@ -46,7 +47,7 @@ public class JsTag extends SimpleTagSupport {
             }
             this.where = "head";
         }
-
+        printInputs("");
         Application.putJs(this.where, this.src, this.on, processedCode, this.async, this.defer, this.merge);
         //out.write("<div> JS tag: " + this.src + "</div>");
     }
@@ -84,6 +85,10 @@ public class JsTag extends SimpleTagSupport {
         this.merge = merge;
     }
 
+    public void setInline(Boolean inline) {
+        this.inline = inline;
+    }
+
     public String processCode(StringWriter code) {
         if (code == null) return null;
         return code.toString().replaceAll("\\s", " ").trim();
@@ -95,6 +100,8 @@ public class JsTag extends SimpleTagSupport {
         System.out.println("  ---   on    ---  " + this.on);
         System.out.println("  ---   async ---  " + this.async);
         System.out.println("  ---   defer ---  " + this.defer);
+        System.out.println("  ---   merge ---  " + this.merge);
+        System.out.println("  ---   inline---  " + this.inline);
         System.out.println("  ---   code  ---  " + code);
     }
 

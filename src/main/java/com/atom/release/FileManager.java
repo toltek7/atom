@@ -6,10 +6,13 @@ import com.google.common.io.Files;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.StandardOpenOption;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -132,6 +135,32 @@ public class FileManager {
         System.out.println("File " + destFile.getAbsolutePath() + " saved.");
 
     }
+
+
+    public static void appendToFile(String scrPath, String destPath) throws IOException {
+        File srcFile  = FileManager.createFile(scrPath);
+        if (!srcFile.exists()){
+            Utils.print("Warning[appendToFile] file + " + srcFile.getAbsolutePath() + " not exist");
+            return;
+        }
+        try {
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(destPath, true));// true to append
+            String content = Files.toString(srcFile, Charsets.UTF_8);
+            bufferedWriter.write(content);
+            bufferedWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void removeFile(String file){
+        try {
+            FileUtils.forceDelete(new File(file));
+        } catch (IOException e) {
+            System.out.println("Error[FileManager]: " + file + " can't be removed. " + e);
+        }
+    }
+
 }
 /*        HttpClient client = new HttpClient();
         StringBuffer url = new StringBuffer("http://localhost:8080/E47");

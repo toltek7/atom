@@ -65,12 +65,16 @@ public class PageTag extends SimpleTagSupport {
 
 
 
-        Application.orderResourceFilesByInitTag();
-        Utils.insertMarkupBeforeNode("</head>", html, Application.getHeadCssTags());
-        Utils.insertMarkupBeforeNode("</head>", html, Application.getHeadJsTags());
-        Utils.insertMarkupBeforeNode("</body>", html, Application.getBodyCssTags());
-        Utils.insertMarkupBeforeNode("</body>", html, Application.getBodyJsTags());
+        Application.streamlineResourcesOrder();// make order of JS/CSS by init file
+        Utils.insertMarkupBeforeNode("</head>", html, Application.getCssInHead());
+        Utils.insertMarkupBeforeNode("</head>", html, Application.getJsInHead());
+        Utils.insertMarkupBeforeNode("</body>", html, Application.getCssInBody());
+        Utils.insertMarkupBeforeNode("</body>", html, Application.getJsInBody());
         Utils.insertMarkupBeforeNode("</body>", html, Application.getJsInlineCode());
+        Application.clearResourcesHolders();//each page may have different resources, so clear them for next page
+        if(!Application.isProductionBuild){
+            Application.cleanInitsFilesOrder();
+        }
 
         getJspContext().getOut().write(html.toString());
 

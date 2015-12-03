@@ -23,6 +23,7 @@ public class InitsTag extends SimpleTagSupport {
         if (body != null) {
             body.invoke(null);
         }
+        //todo убрать чтобы выполнялся один раз для страницы или всей сборки в целом
         Application.getInstance().createListOfFilesOrder();
     }
 }

@@ -16,11 +16,15 @@ public class Application {
     public static Properties properties;
     public static String root;
     public static boolean isProductionBuild;
+    public static boolean forceJsMerge; //merge JS in single file no matter what value set in its tag
 
     private static HttpServletRequest _request;
     private static Application instance;
     private static ServletContext context;
     public static String currentPage;
+    public static String timeStamp;
+    public static String deliveryPath;
+    public static String projectFolder;
 
     private static JsCssManager jsTags, cssTags;
 
@@ -39,13 +43,21 @@ public class Application {
     }
 
     protected Application(Properties properties, ServletContext context) {
+
+        String mergedHeadJs = properties.getProperty(Constants.CONFIG_MAIN_JS_HEAD_FILE, Constants.DEFAULT_MAIN_JS_HEAD_FILE),
+               mergedHeadCss = properties.getProperty(Constants.CONFIG_MAIN_CSS_HEAD_FILE, Constants.DEFAULT_MAIN_CSS_HEAD_FILE),
+               mergedBodyJs = properties.getProperty(Constants.CONFIG_MAIN_JS_BODY_FILE, Constants.DEFAULT_MAIN_JS_BODY_FILE),
+               mergedBodyCss = properties.getProperty(Constants.CONFIG_MAIN_CSS_BODY_FILE, Constants.DEFAULT_MAIN_CSS_BODY_FILE);
+
         this.properties = properties;
         this.root       = context.getRealPath(File.separator);
         this.context    = context;
-        this.jsTags = new JsCssManager();
-        this.cssTags = new JsCssManager();
+        this.jsTags = new JsCssManager(Constants.JS_TAG_TEMPLATE,mergedHeadJs,mergedBodyJs);
+        this.cssTags = new JsCssManager(Constants.CSS_TAG_TEMPLATE,mergedHeadCss,mergedBodyCss);
         this.srcOrder = new JsCssOrderProcessor();
         this.currentPage = null;
+        this.forceJsMerge = true;
+
     }
 
     public static void setRequest(HttpServletRequest request){
@@ -76,36 +88,37 @@ public class Application {
         cssTags.put(where, src, code, mergeInSingleFile);
     }
 
-    public static void removeResourceTags(){
-        jsTags.clean();
-        cssTags.clean();
+    public static void clearResourcesHolders(){
+        jsTags.clear();
+        cssTags.clear();
     }
 
-    public static String getHeadCssTags(){
+    public static String getCssInHead(){
        // Utils.print();
         System.out.println("getHeadCssTags");
         System.out.println(getCurrentPagePath());
 //        System.out.println(_request.getServletPath());
-        return cssTags.getHeadTags(Constants.CSS_TAG_TEMPLATE, getCurrentPagePath());//_request.getServletPath() - current page path, from webinf folder
+
+        return cssTags.getHeadTags(getCurrentPagePath());//_request.getServletPath() - current page path, from webinf folder
     }
 
-    public static String getBodyCssTags(){
-        return cssTags.getBodyTags(Constants.CSS_TAG_TEMPLATE, getCurrentPagePath());
+    public static String getCssInBody(){
+        return cssTags.getBodyTags(getCurrentPagePath());
     }
 
-    public static String getHeadJsTags(){
-        return jsTags.getHeadTags(Constants.JS_TAG_TEMPLATE, getCurrentPagePath());//_request.getServletPath() - current page path, from webinf folder
+    public static String getJsInHead(){
+        return jsTags.getHeadTags(getCurrentPagePath());
     }
     
-    public static String getBodyJsTags(){
-        return jsTags.getBodyTags(Constants.JS_TAG_TEMPLATE, getCurrentPagePath());
+    public static String getJsInBody(){
+        return jsTags.getBodyTags(getCurrentPagePath());
     }
 
     public static String getJsInlineCode(){
         return jsTags.getInlineCode();
     }
 
-    public static void orderResourceFilesByInitTag(){
+    public static void streamlineResourcesOrder(){
         if(!srcOrder.isEmpty()){
             jsTags.sortByInitTagOrder(srcOrder.js);
             cssTags.sortByInitTagOrder(srcOrder.css);
@@ -125,7 +138,6 @@ public class Application {
 
     public static String getProperty(String key, String defaultValue) {
         return properties.getProperty(key, defaultValue);
-
     }
 
     public static void createListOfFilesOrder(){

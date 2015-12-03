@@ -1,5 +1,5 @@
 package com.atom.release;
-
+import java.io.File;
 /**
  * Created by toltek7 on 22.07.2015.
  *
@@ -89,5 +89,16 @@ public class Path {
         return result.toString();
     }
 
+    /**
+     * if pagePath = /project/*.../page.html -> mergedJsPath = project/js/name
+     * if pagePath = /page.html -> mergedJsPath = /js/name
+     * the same works for CSS
+     * NOTE: 100% works only for single page, fro pro build need to check
+     */
+    public static String getMergedFilePath(String name, String pagePath){
+        String[] parts = pagePath.split("/");
+        if(parts.length <= 1) return name;
+        return parts[1] + name;
+    }
 
 }

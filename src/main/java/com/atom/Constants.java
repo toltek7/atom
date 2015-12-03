@@ -23,6 +23,16 @@ public class Constants {
     public static final String CONFIG_INIT_FILE = "inits";
     public static final String DEFAULT_INIT_FILE = "WEB-INF/tags/project1/inits.tagx";
 
+    public static final String CONFIG_MAIN_JS_HEAD_FILE = "mainJsHeadFile";
+    public static final String DEFAULT_MAIN_JS_HEAD_FILE = "/js/main-head.js";
+    public static final String CONFIG_MAIN_JS_BODY_FILE = "mainJsBodyFile";
+    public static final String DEFAULT_MAIN_JS_BODY_FILE = "/js/main-body.js";
+
+    public static final String CONFIG_MAIN_CSS_HEAD_FILE = "mainCssHeadFile";
+    public static final String DEFAULT_MAIN_CSS_HEAD_FILE = "/css/main-head.css";
+    public static final String CONFIG_MAIN_CSS_BODY_FILE = "mainCssBodyFile";
+    public static final String DEFAULT_MAIN_CSS_BODY_FILE = "/css/main-body.css";
+
     public static final String DEFAULT_RELEASE_FOLDER = "../../../release";
 
     public static final String APPLICATION_BUILD_TYPE = "projectBuild";

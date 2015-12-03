@@ -11,7 +11,7 @@ inits 7777777777777777777777777777777777777777777
         <c:when test="${name == 'test2'}">
             <!--<atom:css src="project2/css/2.css"/>-->
             <atom:js src="project1/js/test2.js" where="inline" on="ready" async="true"/>
-            <atom:js src="project1/js/test1.js" where="inline" on="ready" async="true">
+            <atom:js src="project1/js/test1.js"  on="ready" async="true" merge="true">
                 console.log("2  22  fff sode 7777777777777777777 rest 2");
             </atom:js>
             <atom:css src="project1/css/project26.css"/>
@@ -22,19 +22,19 @@ inits 7777777777777777777777777777777777777777777
             <atom:js src="project1/js/test3.js" where="inline" on="load">
                 console.log("333 some JS code here 3 inline load");
             </atom:js>
-            <atom:js src="project1/js/test2.js" where="head" on="ready" async="false" defer="true">
+            <atom:js src="project1/js/test2.js" where="head" on="ready" async="false" defer="true" merge="true">
                 console.log("333 some JS code test2 ready ");
 
             </atom:js>
             <!--<script src="js/test3.js"></script>-->
         </c:when>
         <c:when test="${name == 'test1'}">
-            <atom:js src="project1/js/test1.js" where="body" on="customevent" async="false" defer="false">
+            <atom:js src="project1/js/test1.js" where="head" on="customevent" async="false" defer="false" merge="true">
                 console.log("111 some JS code test1");
 
             </atom:js>
             <atom:js src="project1/js/test3.js" where="inline" />
-            <atom:js src="project1/js/test2.js" where="body" />
+            <atom:js src="project1/js/test2.js" where="body" merge="true"/>
             <atom:js src="project1/js/test3.js" where="inline" async="false">
                 console.log("111 777");
             </atom:js>

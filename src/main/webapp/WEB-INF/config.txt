@@ -4,3 +4,7 @@ jsonDefaultLanguage=ru
 releaseConfigFile=delivery.xml
 projectBuild=development
 inits=WEB-INF/tags/project1/inits.tagx
+mainJsHeadFile=/js/main-head.js
+mainJsBodyFile=/js/main-body.js
+mainCssHeadFile=/css/main-head.css
+mainCssBodyFile=/css/main-body.css
