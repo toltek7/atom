@@ -20,9 +20,9 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class JsTag extends SimpleTagSupport {
 
     private String src = "default.js";
-    private String where = "body";
     private String on = "";
     private String code = "";
+    private Boolean inHead = false;
     private Boolean async = false;
     private Boolean defer = false;
     private Boolean merge = false;
@@ -41,7 +41,7 @@ public class JsTag extends SimpleTagSupport {
 
         validateInputs();
 
-        Application.putJs(this.where, this.src, this.on, this.code, this.async, this.defer, this.merge, this.inline);
+        Application.putJs(this.inHead, this.src, this.on, this.code, this.async, this.defer, this.merge, this.inline);
 
     }
 
@@ -49,15 +49,8 @@ public class JsTag extends SimpleTagSupport {
         this.src = src;
     }
 
-    public void setWhere(String where) {
-        switch (where) {
-            case "head":
-                this.where = where;
-                break;
-            default:
-                this.where = "body";
-                break;
-        }
+    public void setInHead(Boolean inHead) {
+        this.inHead = inHead;
     }
 
     public void setOn(String on) {
@@ -113,7 +106,7 @@ public class JsTag extends SimpleTagSupport {
             out.write(String.format(Constants.SCRIPT_TAG_TEMPLATE, this.code));
             this.async = false;
             this.defer = false;
-            this.where = "head";
+            this.inHead = true;
             this.code = null;
         }
 
@@ -121,14 +114,14 @@ public class JsTag extends SimpleTagSupport {
     }
 
     private void print() {
-        System.out.println("  ---   src   ---  " + this.src);
-        System.out.println("  ---   where ---  " + this.where);
-        System.out.println("  ---   on    ---  " + this.on);
-        System.out.println("  ---   async ---  " + this.async);
-        System.out.println("  ---   defer ---  " + this.defer);
-        System.out.println("  ---   merge ---  " + this.merge);
-        System.out.println("  ---   inline---  " + this.inline);
-        System.out.println("  ---   code  ---  " + this.code);
+        System.out.println("  ---   src    ---  " + this.src);
+        System.out.println("  ---   inHead ---  " + this.inHead);
+        System.out.println("  ---   on     ---  " + this.on);
+        System.out.println("  ---   async  ---  " + this.async);
+        System.out.println("  ---   defer  ---  " + this.defer);
+        System.out.println("  ---   merge  ---  " + this.merge);
+        System.out.println("  ---   inline ---  " + this.inline);
+        System.out.println("  ---   code   ---  " + this.code);
     }
 
 }

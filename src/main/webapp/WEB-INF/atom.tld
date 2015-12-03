@@ -71,10 +71,10 @@
             <type>java.lang.String</type>
         </attribute>
         <attribute>
-            <name>where</name>
+            <name>inHead</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
+            <type>java.lang.Boolean</type>
         </attribute>
         <attribute>
             <name>on</name>
@@ -125,13 +125,25 @@
             <type>java.lang.String</type>
         </attribute>
         <attribute>
-            <name>where</name>
+            <name>code</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <type>java.lang.String</type>
         </attribute>
         <attribute>
+            <name>inHead</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Boolean</type>
+        </attribute>
+        <attribute>
             <name>merge</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Boolean</type>
+        </attribute>
+        <attribute>
+            <name>inline</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <type>java.lang.Boolean</type>

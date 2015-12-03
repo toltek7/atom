@@ -19,8 +19,10 @@ import java.io.StringWriter;
 public class CssTag extends SimpleTagSupport {
 
     private String  src   = "";
-    private String  where = "head";
+    private String  code   = "";
+    private Boolean inHead = true;
     private Boolean merge = false;
+    private Boolean inline = false;
 
     public void doTag() throws IOException, JspException {
 
@@ -30,22 +32,23 @@ public class CssTag extends SimpleTagSupport {
 
         if(body != null) body.invoke(code);
 
-        String processedCode = Utils.trimString(code.toString());
+        this.code = Utils.trimString(code.toString());
 
-        if(this.src.isEmpty()){
-            this.where = "inline";
+//        if(this.src.isEmpty()){
+//            this.where = "inline";
+//        }
+
+        if(!this.code.isEmpty()){
+            out.write(String.format(Constants.STYLE_TAG_TEMPLATE,this.code));
+            this.code = null;
+            this.inHead = true;
         }
 
-        if (this.where.equals("inline")) {
-            if(!processedCode.isEmpty()){
-                out.write(String.format(Constants.STYLE_TAG_TEMPLATE,processedCode));
-                processedCode = null;
-            }
+     /*   if (this.where.equals("inline")) {
             this.where = "head";
-        }
+        }*/
 
-        Application.putCss(this.where, this.src, processedCode, this.merge, false);
-//        out.write("<div> CSS tag: " + this.src + "</div>");
+        Application.putCss(this.inHead, this.src, this.code, this.merge, this.inline);
 
     }
 
@@ -53,18 +56,17 @@ public class CssTag extends SimpleTagSupport {
         this.src = src;
     }
 
-    public void setWhere(String where) {
-        switch (where) {
-            case "head":
-            case "inline":
-                this.where = where;
-                break;
-            default:
-                this.where = "body";
-                break;
-        }
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public void setInHead(Boolean inHead) {
+        this.inHead = inHead;
     }
     public void setMerge(Boolean merge) {
         this.merge = merge;
+    }
+    public void setInline(Boolean inline) {
+        this.inline = inline;
     }
 }

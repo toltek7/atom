@@ -52,12 +52,12 @@ public class JsCssManager {
      * mergeInSingleFile - if true, the script placed to the some common.js file and src link to this common.js file
      * inline - if true js puts on page inline, no processing in manager
      */
-    public void save(String where, String src, String onEvent, String code, boolean async, boolean defer, boolean mergeInSingleFile, boolean inline) {
+    public void save(Boolean inHead, String src, String onEvent, String code, boolean async, boolean defer, boolean mergeInSingleFile, boolean inline) {
         boolean[] attr = new boolean[]{async, defer, mergeInSingleFile, inline};
-        attr = _saveSrc(src, attr,where);
+        attr = _saveSrc(src, attr, _getWhere(inHead));
         //process inline attribute, if it is true, means it is already on page, res from head and body should be removed
         if(attr[3]){
-            _reWriteSrc(src, attr, _getAntiWhere(where));
+            _reWriteSrc(src, attr, _getAntiWhere(inHead));
         }
         //save inline code, key=onEvent
         HashSet<String> codeSet = new HashSet<>();
@@ -69,8 +69,8 @@ public class JsCssManager {
     /**
      * put css
      * */
-    public void save(String where, String src, String code, boolean mergeInSingleFile, boolean inline) {
-        save(where, src, null, code, false, false, mergeInSingleFile, inline);
+    public void save(Boolean inHead, String src, String code, boolean mergeInSingleFile, boolean inline) {
+        save(inHead, src, null, code, false, false, mergeInSingleFile, inline);
     }
 
     private boolean[] _saveSrc(String src, boolean[] attributes, String where){
@@ -96,8 +96,13 @@ public class JsCssManager {
         }
     }
 
-    private String _getAntiWhere(String where){
-        if(where.equals("head")) return "body";
+    private String _getWhere(Boolean inHead){
+        if(!inHead) return "body";
+        return "head";
+    }
+
+    private String _getAntiWhere(Boolean inHead){
+        if(inHead) return "body";
         return "head";
     }
 

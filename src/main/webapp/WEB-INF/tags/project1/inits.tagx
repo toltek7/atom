@@ -9,7 +9,7 @@
     <c:choose>
         <c:when test="${name == 'test2'}">
             <!--<atom:css src="project2/css/2.css"/>-->
-            <atom:js src="tests/js/test-2.js" where="inline" on="ready" async="true"/>
+            <atom:js src="tests/js/test-2.js"  on="ready" async="true"/>
             <atom:js src="tests/js/test-1.js"  on="ready" async="true" merge="true">
                 console.log("2  22  fff sode 7777777777777777777 rest 2");
             </atom:js>
@@ -18,26 +18,26 @@
         </c:when>
         <c:when test="${name == 'test3'}">
             <atom:css src="tests/css/tests.css"/>
-            <atom:js src="tests/js/test-3.js" where="inline" on="load">
+            <atom:js src="tests/js/test-3.js" on="load">
                 console.log("333 some JS code here 3 inline load");
             </atom:js>
-            <atom:js src="tests/js/test-2.js" where="head"  async="false" defer="true" merge="true">
+            <atom:js src="tests/js/test-2.js" inHead="true"  async="false" defer="true" merge="true">
                 console.log("333 some JS code test2 ready ");
 
             </atom:js>
             <!--<script src="js/test3.js"></script>-->
         </c:when>
         <c:when test="${name == 'test1'}">
-            <atom:js src="tests/js/test-1.js" where="head" on="customevent" async="false" defer="false" merge="true">
+            <atom:js src="tests/js/test-1.js" inHead="true" on="customevent" async="false" defer="false" merge="true">
                 console.log("111 some JS code test1");
             </atom:js>
-            <atom:js src="tests/js/test-3.js" where="inline" />
-            <atom:js src="tests/js/test-2.js" where="body" merge="true"/>
-            <atom:js src="tests/js/test-3.js" where="inline" async="false">
+            <atom:js src="tests/js/test-3.js"  />
+            <atom:js src="tests/js/test-2.js"  merge="true"/>
+            <atom:js src="tests/js/test-3.js"  async="false">
                 console.log("111 777");
             </atom:js>
 
-            <atom:js src="tests/js/test-7.js" where="body"  merge="true"/>
+            <atom:js src="tests/js/test-7.js"  merge="true"/>
 
             <!--<script src="js/test1.js"></script>-->
         </c:when>

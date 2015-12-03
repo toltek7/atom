@@ -4,8 +4,8 @@
     <head>
         <title>Project1</title>
         <atom:css src="tests/css/test.css"/>
-        <atom:js src="project1/js/external/jquery-2.1.4.js" where="head"/>
-        <atom:js src="tests/js/test-main.js" where="body"/>
+        <atom:js src="project1/js/external/jquery-2.1.4.js" inHead="true"/>
+        <atom:js src="tests/js/test-main.js"/>
         <!--<link rel="stylesheet" type="text/css" href="css/project1.css"/>-->
         <!--<script type="text/javascript" src="js/project1.js"></script>-->
     </head>
