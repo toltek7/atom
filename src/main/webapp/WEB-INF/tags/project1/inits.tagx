@@ -17,6 +17,8 @@
             <!--<script src="js/test2.js"></script>-->
         </c:when>
         <c:when test="${name == 'test3'}">
+            <!--<atom:js src="tests/js/test-7.js"  inline="true"/>-->
+
             <atom:css src="tests/css/tests.css"/>
             <atom:js src="tests/js/test-3.js" on="load">
                 console.log("333 some JS code here 3 inline load");
@@ -45,7 +47,9 @@
 
         <c:when test="${name == 'test7'}">
             <atom:js src="tests/js/test-7.js" inline="true">
-                console.log("test7 inline code");
+                $(document).ready(function () {
+                    $(".test7").text("inline code from test7");
+                });
             </atom:js>
         </c:when>
 

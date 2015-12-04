@@ -59,6 +59,7 @@ public class JsCssManager {
         if(attr[3]){
             _reWriteSrc(src, attr, _getAntiWhere(inHead));
         }
+        //Utils.print(srcHolder,"-save ");
         //save inline code, key=onEvent
         HashSet<String> codeSet = new HashSet<>();
         if (codeHolder.containsKey(onEvent)) codeSet = codeHolder.get(onEvent);
@@ -94,6 +95,13 @@ public class JsCssManager {
             attrSet.put(src, attributes);
             srcHolder.put(where, attrSet);
         }
+    }
+
+    public boolean hasSrc(String where, String src){
+        Map<String, boolean[]> attrSet = new LinkedHashMap<>();
+        if (srcHolder.containsKey(where)) attrSet = srcHolder.get(where);
+        if (attrSet.containsKey(src)) return true;
+        return false;
     }
 
     private String _getWhere(Boolean inHead){
@@ -257,9 +265,9 @@ public class JsCssManager {
         while (iter.hasNext()) {
             Map.Entry<String, boolean[]> entry = iter.next();
             src = entry.getKey();
-            Utils.print("---" + src);
+            //Utils.print("---" + src);
             if(!orderedList.contains(src)){
-                Utils.print("---" + src);
+                //Utils.print("---" + src);
                 sortedMap.put(src,entry.getValue());
                 iter.remove(); //remove it from future analization
             }

@@ -90,11 +90,15 @@ public class JsTag extends SimpleTagSupport {
 
         //script should be added to the page inline, all others attributes not make force
         if (this.inline) {
-            String content = FileManager.readFile(Application.root + "/" + this.src) + this.code;
-            if (!content.isEmpty()) {
-                out.write(String.format(Constants.SCRIPT_TAG_TEMPLATE, content));
-                this.code = "";
+            //if already on page do not need to write it
+            if(!Application.hasJs(this.src)){
+                String content = FileManager.readFile(Application.root + "/" + this.src) + this.code;
+                if (!content.isEmpty()) {
+                    out.write(String.format(Constants.SCRIPT_TAG_TEMPLATE, content));
+                }
             }
+            this.code = "";
+            this.inHead = true;
             //print();
         }
 
