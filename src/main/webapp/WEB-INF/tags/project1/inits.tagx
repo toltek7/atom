@@ -17,34 +17,16 @@
             <!--<script src="js/test2.js"></script>-->
         </c:when>
         <c:when test="${name == 'test3'}">
-            <!--<atom:js src="tests/js/test-7.js"  inline="true"/>-->
-
-            <atom:css src="tests/css/tests.css"/>
-            <atom:js src="tests/js/test-3.js" on="load">
-                console.log("333 some JS code here 3 inline load");
+            <atom:js src="tests/js/test-3.js">
+                console.log('test3 inline code');
             </atom:js>
-            <atom:js src="tests/js/test-2.js" inHead="true"  async="false" defer="true" merge="true">
-                console.log("333 some JS code test2 ready ");
-
-            </atom:js>
-            <!--<script src="js/test3.js"></script>-->
         </c:when>
         <c:when test="${name == 'test1'}">
-            <atom:js src="tests/js/test-1.js" inHead="true" on="customevent" async="false" defer="false" merge="true">
-                console.log("111 some JS code test1");
+            <atom:js src="tests/js/test-1.js" inHead="true">
+                console.log('test1 inline code');
             </atom:js>
-            <atom:js src="tests/js/test-3.js"  />
-            <atom:js src="tests/js/test-2.js"  merge="true"/>
-            <atom:js src="tests/js/test-3.js"  async="false">
-                console.log("111 777");
-            </atom:js>
-
             <atom:js src="tests/js/test-7.js"  merge="true"/>
-
-            <!--<script src="js/test1.js"></script>-->
         </c:when>
-
-
         <c:when test="${name == 'test7'}">
             <atom:js src="tests/js/test-7.js" inline="true">
                 $(document).ready(function () {

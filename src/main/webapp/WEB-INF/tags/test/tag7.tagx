@@ -2,7 +2,7 @@
            xmlns="http://www.w3.org/1999/xhtml"
            xmlns:project="urn:jsptagdir:/WEB-INF/tags/project1">
 
-    <div>tag for testing - <b>tag7</b></div>
+    <div id="tag7">tag for testing - <b>tag7</b></div>
 
     <project:inits name="test7"/>
 
