@@ -8,13 +8,9 @@
     <!--${pageContext.request.contextPath}-->
     <c:choose>
         <c:when test="${name == 'test2'}">
-            <!--<atom:css src="project2/css/2.css"/>-->
-            <atom:js src="tests/js/test-2.js"  on="ready" async="true"/>
-            <atom:js src="tests/js/test-1.js"  on="ready" async="true" merge="true">
-                console.log("2  22  fff sode 7777777777777777777 rest 2");
+            <atom:js src="tests/js/test-2.js"  inHead="true" merge="true">
+                console.log('test2 inline code');
             </atom:js>
-            <atom:css src="tests/css/project26.css"/>
-            <!--<script src="js/test2.js"></script>-->
         </c:when>
         <c:when test="${name == 'test3'}">
             <atom:js src="tests/js/test-3.js">
@@ -34,6 +30,27 @@
                 });
             </atom:js>
         </c:when>
+        <c:when test="${name == 'test6'}">
+            <atom:js src="tests/js/test-6.js" on="customevent">
+                console.log('test6 inline code');
+            </atom:js>
+        </c:when>
+        <c:when test="${name == 'test5'}">
+            <atom:js src="tests/js/test-5.js" inHead="true" on="customevent">
+                console.log('test5 inline code');
+            </atom:js>
+        </c:when>
+        <c:when test="${name == 'test4'}">
+            <atom:js src="tests/js/test-4.js" merge="true">
+                console.log('test4 inline code');
+            </atom:js>
+        </c:when>
+        <c:when test="${name == 'test8'}">
+            <atom:js src="tests/js/test-8.js" inHead="true" on="customevent" merge="true">
+                console.log('test8 inline code');
+            </atom:js>
+        </c:when>
+
 
     </c:choose>
 

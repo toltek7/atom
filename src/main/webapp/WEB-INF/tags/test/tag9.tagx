@@ -1,0 +1,9 @@
+<atom:atom xmlns:atom="http://atom.com"
+           xmlns="http://www.w3.org/1999/xhtml"
+           xmlns:project="urn:jsptagdir:/WEB-INF/tags/project1">
+
+    <div id="tag9">tag for testing - <b>tag9</b></div>
+
+    <project:inits name="test9"/>
+
+</atom:atom>
