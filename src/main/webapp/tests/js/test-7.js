@@ -9,3 +9,4 @@ $(document).ready(function () {
     }
 });
 //]]>
+console.log("test7 file");

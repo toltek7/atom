@@ -79,6 +79,8 @@ public class JsCssManager {
         if (srcHolder.containsKey(where)) attrSet = srcHolder.get(where);
         if (attrSet.containsKey(src)){
             boolean[]  array = attrSet.get(src);
+            attributes[0] = array[0];
+            attributes[1] = array[1];
             attributes[2] = attributes[2] || array[2]; //merge attribute, if some script has it, others also should have it
             attributes[3] = attributes[3] || array[3]; //inline attribute, if some script has it, others also should have it
         }

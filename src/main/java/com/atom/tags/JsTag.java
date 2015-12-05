@@ -114,6 +114,10 @@ public class JsTag extends SimpleTagSupport {
             this.code = null;
         }
 
+        if(this.code == null || this.code.isEmpty()){
+            this.on = "";
+        }
+
         //print();
     }
 
