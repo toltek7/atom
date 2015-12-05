@@ -5,6 +5,7 @@ import com.atom.Constants;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by toltek7 on 08.01.2015.
@@ -24,6 +25,13 @@ public class Utils {
                 System.out.println("   " + src.getKey());
                 System.out.println("      " + array[0] + " " + array[1] + " " + array[2] + " " + array[3]);
             }
+        }
+    }
+
+    public static void print(Set<String> set, String message){
+        System.out.println(message);
+        for(String s: set){
+            System.out.println(s);
         }
     }
 

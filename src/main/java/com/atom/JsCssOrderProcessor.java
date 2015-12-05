@@ -21,12 +21,13 @@ import java.util.Set;
 
 public class JsCssOrderProcessor {
 
-    public Set<String> js;
-    public Set<String> css;
+    public Set<String> js,jsCode,css,cssCode;
 
     public JsCssOrderProcessor(){
-        js = new LinkedHashSet<String>();
-        css = new LinkedHashSet<String>();
+        js = new LinkedHashSet<>();
+        css = new LinkedHashSet<>();
+        jsCode = new LinkedHashSet<>();
+        cssCode = new LinkedHashSet<>();
     }
 
     public void getFilesOrder(String path){
@@ -37,20 +38,26 @@ public class JsCssOrderProcessor {
         org.jsoup.nodes.Document doc = null;
         try {
             doc = Jsoup.parse(input, "UTF-8");
-            js = collectFilesByTagName(doc,"atom:js");
-            css = collectFilesByTagName(doc,"atom:css");
-            print(js);
-            print(css);
+            js = collectFilesByTagName(doc,"atom:js",jsCode);
+            css = collectFilesByTagName(doc,"atom:css",cssCode);
+//            print(js);
+//            print(css);
+            //print(jsCode);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
-    public LinkedHashSet<String> collectFilesByTagName(org.jsoup.nodes.Document doc, String tagName){
+    public LinkedHashSet<String> collectFilesByTagName(org.jsoup.nodes.Document doc, String tagName, Set<String> code){
         LinkedHashSet<String> set = new LinkedHashSet<String>();
         Elements tags = doc.getElementsByTag(tagName);
+        String text;
         for(Element tag: tags){
             set.add(tag.attr("src"));
+            text = tag.text().replaceAll("\\s", " ").trim();
+            if(text!=null && !text.isEmpty()){
+                code.add(text);
+            }
         }
         return set;
     }

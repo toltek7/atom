@@ -124,8 +124,8 @@ public class Application {
 
     public static void streamlineResourcesOrder(){
         if(!srcOrder.isEmpty()){
-            jsTags.sort(srcOrder.js);
-            cssTags.sort(srcOrder.css);
+            jsTags.sort(srcOrder.js,srcOrder.jsCode);
+            cssTags.sort(srcOrder.css,srcOrder.cssCode);
         }
     }
 

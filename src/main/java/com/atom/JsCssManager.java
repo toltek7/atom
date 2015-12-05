@@ -30,7 +30,7 @@ public class JsCssManager {
 
     //NOTE: in mergedSrcHolder store files that should be merged in one, after all parsings complited
     private Map<String, Map<String, boolean[]>> srcHolder, mergedSrcHolder;
-    private Map<String, HashSet> codeHolder;
+    private Map<String, LinkedHashSet> codeHolder;
     private String tagTemplate, mergedHeadFile, mergedBodyFile;
 
     protected JsCssManager(String tagTemplate, String headFile, String bodyFile) {
@@ -61,7 +61,7 @@ public class JsCssManager {
         }
         //Utils.print(srcHolder,"-save ");
         //save inline code, key=onEvent
-        HashSet<String> codeSet = new HashSet<>();
+        LinkedHashSet<String> codeSet = new LinkedHashSet<>();
         if (codeHolder.containsKey(onEvent)) codeSet = codeHolder.get(onEvent);
         codeSet.add(code);
         codeHolder.put(onEvent, codeSet);
@@ -233,7 +233,7 @@ public class JsCssManager {
             mergedCode.setLength(0);
             mergedCode.trimToSize();
             onEvent = (String) entry.getKey();
-            iterator = ((HashSet) entry.getValue()).iterator();
+            iterator = ((LinkedHashSet) entry.getValue()).iterator();
             while (iterator.hasNext()) {
                 inlineCode = (String) iterator.next();
                 if (inlineCode != null && !inlineCode.isEmpty()) mergedCode.append(inlineCode.trim());
@@ -251,14 +251,45 @@ public class JsCssManager {
         return "";
     }
 
-    public void sort(Set<String> orderedList){
-        if(orderedList == null ||  orderedList.isEmpty()) return;  
-        sortSrcByOrder("head", orderedList);
-        sortSrcByOrder("body", orderedList);
+    public void sort(Set<String> src, Set<String> code){
+        if(src != null && !src.isEmpty()){
+            sortSrcByOrder(src);
+        }
+        if(code != null && !code.isEmpty()){
+            sortCodeByOrder(code);
+        }
     }
 
-    private void sortSrcByOrder(String key, Set<String> orderedList){
-        Map<String, boolean[]> srcMap = srcHolder.get(key);
+    private void sortSrcByOrder(Set<String> orderedList){
+        Iterator<Map.Entry<String, Map<String, boolean[]>>> iterMain = srcHolder.entrySet().iterator();
+        while (iterMain.hasNext()) {
+            Map.Entry<String, Map<String, boolean[]>> entryMain = iterMain.next();
+            Map<String, boolean[]> srcMap = entryMain.getValue();
+            Map<String, boolean[]> sortedMap = new LinkedHashMap<>();
+            //firstly detect src that not in order list, but on page (example external scripts)
+            String src;
+            Iterator<Map.Entry<String, boolean[]>> iter = srcMap.entrySet().iterator();
+            while (iter.hasNext()) {
+                Map.Entry<String, boolean[]> entry = iter.next();
+                src = entry.getKey();
+                if(!orderedList.contains(src)){
+                    sortedMap.put(src,entry.getValue());
+                    iter.remove(); //remove it from future analization
+                }
+            }
+            //now sort other src
+            for(String s : orderedList){
+                if(srcMap.containsKey(s)){
+                    sortedMap.put(s,srcMap.get(s));
+                }
+            }
+            //rewrite main holder
+            if(!sortedMap.isEmpty()){
+                srcHolder.put(entryMain.getKey(),sortedMap);
+            }
+        }
+
+      /*  Map<String, boolean[]> srcMap = srcHolder.get(key);
         if(srcMap == null || srcMap.isEmpty()) return;
         Map<String, boolean[]> sortedMap = new LinkedHashMap<>();
         //firstly detect src that not in order list, but on page (example external scripts)
@@ -283,8 +314,37 @@ public class JsCssManager {
         //rewrite main holder
         if(!sortedMap.isEmpty()){
             srcHolder.put(key,sortedMap);
-        }
+        }*/
         //Utils.print(srcHolder, "sorted print ");
     }
 
+    private void sortCodeByOrder(Set<String> orderedList){
+        Iterator<Map.Entry<String, LinkedHashSet>> iterMain = codeHolder.entrySet().iterator();
+        while (iterMain.hasNext()) {
+            Map.Entry<String, LinkedHashSet> entryMain = iterMain.next();
+            LinkedHashSet codes = entryMain.getValue();
+            LinkedHashSet <String> sortedMap = new LinkedHashSet<>();
+            //firstly detect code that not in order list, but on page (example external scripts)
+            Iterator iter = codes.iterator();
+            while (iter.hasNext()) {
+                String code = (String) iter.next();
+                if(!orderedList.contains(code)){
+                    sortedMap.add(code);
+                    iter.remove(); //remove it from future analization
+                }
+            }
+            //now sort other src
+            for(String s : orderedList){
+                if(codes.contains(s)){
+                    sortedMap.add(s);
+                }
+            }
+            //rewrite main holder
+            if(!sortedMap.isEmpty()){
+                codeHolder.put(entryMain.getKey(),sortedMap);
+            }
+            //Utils.print(codeHolder.get(entryMain.getKey()),"sorted map after");
+        }
+
+    }
 }
