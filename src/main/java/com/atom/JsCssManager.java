@@ -3,6 +3,8 @@ package com.atom;
 import com.atom.release.FileManager;
 import com.atom.release.Path;
 import com.atom.release.Utils;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -238,11 +240,12 @@ public class JsCssManager {
                 inlineCode = (String) iterator.next();
                 if (inlineCode != null && !inlineCode.isEmpty()) mergedCode.append(inlineCode.trim());
             }
-            switch (onEvent) {
-                case "ready":
-                case "":     finalCode.append(String.format(Constants.JS_ONREADY_TEMPLATE, mergedCode)); break;
-                case "load": finalCode.append(String.format(Constants.JS_ONLOAD_TEMPLATE, mergedCode));  break;
-                default:     finalCode.append(String.format(Constants.JS_CUSTOM_TEMPLATE, onEvent, mergedCode));
+            if(StringUtils.isNotBlank(onEvent)){
+                switch (onEvent) {
+                    case "ready":finalCode.append(String.format(Constants.JS_ONREADY_TEMPLATE, mergedCode)); break;
+                    case "load": finalCode.append(String.format(Constants.JS_ONLOAD_TEMPLATE, mergedCode));  break;
+                    default:     finalCode.append(String.format(Constants.JS_CUSTOM_TEMPLATE, onEvent, mergedCode));
+                }
             }
         }
         if (finalCode.length() > 0) {
