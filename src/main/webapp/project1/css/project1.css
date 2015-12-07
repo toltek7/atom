@@ -12,3 +12,30 @@
     height:600px;
     background-size: 100% 100%;
 }
+
+ol,ul{
+    list-style-position: inside;
+    margin-top: 1em;
+    margin-left: 0.5em;
+}
+ul{list-style: disc inside}
+li {margin-bottom: 1em}
+li .description{
+    font-size: 1em;
+}
+li pre{
+    margin-left: 2em;
+}
+
+h1{font-size: 2em; font-weight: bold}
+h1{font-size: 1.5em; font-weight: bold}
+
+code{
+    font-size: 0.8em;
+}
+
+
+b{font-weight: bold}
+.hljs-tag{
+    display: block;
+}

@@ -1,0 +1,9 @@
+<atom:atom xmlns:atom="http://atom.com"
+           xmlns="http://www.w3.org/1999/xhtml"
+           xmlns:c="http://java.sun.com/jsp/jstl/core"
+           xmlns:jsp="http://java.sun.com/JSP/Page">
+
+    <c:set var="tag">result</c:set>
+    <c:set var="text"><jsp:doBody/></c:set>
+    Разметка:   ${text}
+</atom:atom>

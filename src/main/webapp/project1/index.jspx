@@ -1,19 +1,28 @@
 <atom:page xmlns:atom="http://atom.com"
            xmlns:test="urn:jsptagdir:/WEB-INF/tags/test"
-           xmlns:utils="urn:jsptagdir:/WEB-INF/tags/utils">
+
+           xmlns:c="http://java.sun.com/jsp/jstl/core"
+           xmlns:utils="urn:jsptagdir:/WEB-INF/tags/utils"
+           xmlns:code="urn:jsptagdir:/WEB-INF/tags/code">
     <html xmlns="http://www.w3.org/1999/xhtml" lang="ru">
     <head>
         <title>Project1</title>
         <!--<intercept-url pattern="/favicon.ico" access="ROLE_ANONYMOUS" />-->
         <!--<link rel="shortcut icon" href="/PATH_TO_STATIC_FAVICON/favicon.ico" type="image/x-icon">-->
+        <atom:css src="project1/css/external/reset.css"/>
+        <atom:css src="project1/css/external/googlecode.css"/>
         <atom:css src="project1/css/project1.css"/>
+        <atom:js src="project1/js/external/jquery-2.1.4.js" inHead="true"/>
+        <atom:js src="project1/js/external/highlight.pack.js" on="ready">
+            $('pre code').each(function(i, block) {
+                hljs.highlightBlock(block);
+            });
+        </atom:js>
         <!--<link rel="stylesheet" type="text/css" href="css/project1.css"/>-->
         <!--<script type="text/javascript" src="js/project1.js"></script>-->
     </head>
     <body>
     <div class="body">
-
-
         <h1>${data.atom}</h1>
         <p>${data['atom-description']}</p>
         <utils:ul items="${data['atom-features']}" var="item" varStatus="i">
@@ -28,22 +37,70 @@
         </p>
         <ol>
             <li>
-                <atom:tag dropEmptyTag="true"> without any tag (dropEmptyTag=true)</atom:tag>
+                <div class="description">
+                    <atom:tag dropEmptyTag="true"> without any tag (dropEmptyTag=true)</atom:tag>
+                </div>
+                <pre>
+                    <code class="xml">
+                        <code:code tag="atom:tag" attributes='dropEmptyTag="true"'>text</code:code>
+                        <code:result>text</code:result>
+                    </code>
+                </pre>
             </li>
             <li>
                 <atom:tag>inside default tag - DIV</atom:tag>
+                <pre>
+                    <code class="xml">
+                        <code:code tag="atom:tag">text</code:code>
+                        <code:result>
+                            <code:code tag="div" withoutLabel="true">text</code:code>
+                        </code:result>
+                    </code>
+                </pre>
             </li>
             <li>
                 <atom:tag tag="span"> inside SPAN tag</atom:tag>
+                <pre>
+                    <code class="xml">
+                        <code:code tag="atom:tag" attributes='tag="span"'>text</code:code>
+                        <code:result>
+                            <code:code tag="span" withoutLabel="true">text</code:code>
+                        </code:result>
+                    </code>
+                </pre>
             </li>
             <li>
                 <atom:tag tag="span" class="custom-class-name"> with castom classname</atom:tag>
+                <pre>
+                    <code class="xml">
+                        <code:code tag="atom:tag" attributes='tag="span" class="custom-class-name"'>text</code:code>
+                        <code:result>
+                            <code:code tag="span" attributes='class="custom-class-name"' withoutLabel="true">text</code:code>
+                        </code:result>
+                    </code>
+                </pre>
             </li>
             <li>
                 <atom:tag tag="span" any="custom-attribute" id="someid"> with castom attributes</atom:tag>
+                <pre>
+                    <code class="xml">
+                        <code:code tag="atom:tag" attributes='tag="span" any="custom-attribute" id="someid"'>text</code:code>
+                        <code:result>
+                            <code:code tag="span" attributes='any="custom-attribute" id="someid"' withoutLabel="true">text</code:code>
+                        </code:result>
+                    </code>
+                </pre>
             </li>
             <li>
                 <atom:tag extraAttributes="class=extra,data-attr=extra-data"> with extra (dynamic) attributes, added for nesting tags (see example with ul)</atom:tag>
+                <pre>
+                    <code class="xml">
+                        <code:code tag="atom:tag" attributes='extraAttributes="class=extra,data-attr=extra-data"'>text</code:code>
+                        <code:result>
+                            <code:code tag="div" attributes='class="extra" data-attr="extra-data"' withoutLabel="true">text</code:code>
+                        </code:result>
+                    </code>
+                </pre>
             </li>
         </ol>
 
@@ -53,6 +110,25 @@
                   liExtraAttributes="class=li-class,data-attr=li-data">
             <a class="a-class" href="${item.href}">${item.text}</a>
         </utils:ul>
+        <pre>
+            <code class="xml">
+                <code:code tag="utils:ul" attributes='items="${data["ul-items"]}" var="item" varStatus="i" class="ul-class" data-attr="ul-data"
+                  liExtraAttributes="class=li-class,data-attr=li-data"'>
+                    <a class="a-class" href="${item.href}">${item.text}</a>
+                </code:code>
+                <code:result>
+                    <code:code tag="ul" attributes='data-attr="ul-data" class="ul-class"' withoutLabel="true">
+                        <c:forEach items="${data['ul-items']}" var="item" varStatus="i">
+                            <code:code tag='li' attributes='data-attr="li-data" class="li-class"' withoutLabel="true">
+                                <code:code tag="a" attributes='class="a-class" href="${item.href}" ' withoutLabel="true">${item.text}</code:code>
+                            </code:code>
+                        </c:forEach>
+                     </code:code>
+                </code:result>
+            </code>
+        </pre>
+
+
 
 
         <p class="description">

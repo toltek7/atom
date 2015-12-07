@@ -1,0 +1,19 @@
+<atom:atom xmlns:atom="http://atom.com"
+           xmlns="http://www.w3.org/1999/xhtml"
+           xmlns:c="http://java.sun.com/jsp/jstl/core"
+           xmlns:jsp="http://java.sun.com/JSP/Page">
+
+    <jsp:directive.attribute name="tag"/>
+    <jsp:directive.attribute name="attributes"/>
+    <jsp:directive.attribute name="withoutLabel" type="java.lang.Boolean"/>
+    <c:set var="text"><jsp:doBody/></c:set>
+    <c:if test="${empty withoutLabel}">
+        <c:set var="string"><span class="code-label">Код:</span></c:set>
+    </c:if>
+    <c:if test="${not empty attributes}">
+        <![CDATA[ ${string}          &lt;${tag} ${attributes}&gt;${text}&lt;/${tag}&gt;]]>
+    </c:if>
+    <c:if test="${empty attributes}">
+        <![CDATA[ ${string}        &lt;${tag}&gt;${text}&lt;/${tag}&gt; ]]>
+    </c:if>
+</atom:atom>
