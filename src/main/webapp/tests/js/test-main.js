@@ -11,7 +11,8 @@ readStringFromFileAtPath = function(pathOfFileToReadFrom)
 
 $(window).load(function () {
     var report = $("#report"),
-        error = 0;
+        error = 0,
+        tests = 0;
     if (report) {
 
         var mainHeadText = readStringFromFileAtPath("js/main-head.js"),
@@ -27,11 +28,12 @@ $(window).load(function () {
 
         function test(text,func){
             var node = $("<p/>", {text: text}).appendTo(report);
+            tests++;
             if(func.apply()){
                 node.append($("<b/>", {class: "success", text: "done"}));
-                error++;
             }else{
                 node.append($("<b/>", {class: "error", text: "failed"}));
+                error++;
             }
         }
 
@@ -223,6 +225,12 @@ $(window).load(function () {
                 mainCssBodyText.indexOf('.test10-file-code{}') == -1&&
                 mainCssHeadText.indexOf('.test10-file-code{}') ==-1&&
                 ($("#tag8").next().text().trim() == ".test10-file-code{}");
+        });
+
+
+        // ===============  result
+        test("Results: " + tests + " tests run (error: " + error + "): ",function(){
+            return error == 0;
         });
     }
 });
