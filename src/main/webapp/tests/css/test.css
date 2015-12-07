@@ -3,6 +3,7 @@
     min-width: 600px;
     min-height: 100px;
     margin: 0 auto;
+    display: none;
 }
 
 .error{
@@ -10,5 +11,11 @@
 }
 .success{
     color: green;
+}
+p{
+    font-size: 12px;
+    line-height: 14px;
+    margin-bottom: 0;
+    margin-top: 0.4em;
 }
 

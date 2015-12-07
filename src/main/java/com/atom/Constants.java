@@ -55,4 +55,9 @@ public class Constants {
     public static final String STYLE_TAG_TEMPLATE = "<style type=\"text/css\">%s</style>\n";
 
     public static final String NL = "\r\n";
+
+    public static final Integer ASYNC = 0;
+    public static final Integer DEFER = 1;
+    public static final Integer MERGE = 2;
+    public static final Integer INLINE = 3;
 }

@@ -11,8 +11,6 @@
     </head>
     <body>
     <div class="body">
-        <div id="test-js"></div>
-        <div id="report"></div>
         <h1>test JS order 3-1-2</h1>
         <test:tag1/>
         <test:tag2/>
@@ -23,8 +21,8 @@
         <test:tag7/>
         <test:tag8/>
         <test:tag9/>
-
-
+        <div id="test-js"></div>
+        <div id="report"></div>
     </div>
 
     </body>

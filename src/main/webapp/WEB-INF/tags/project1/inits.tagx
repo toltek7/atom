@@ -11,11 +11,13 @@
             <atom:js src="tests/js/test-9.js" on="customevent" merge="true">
                 console.log('test9 inline code');
             </atom:js>
+            <atom:css src="tests/css/test-10.css"/>
         </c:when>
         <c:when test="${name == 'test2'}">
             <atom:js src="tests/js/test-2.js"  inHead="true" merge="true">
                 console.log('test2 inline code');
             </atom:js>
+            <atom:css>.test-2-inline{}</atom:css>
         </c:when>
         <c:when test="${name == 'test3'}">
             <atom:js src="tests/js/test-3.js">
@@ -23,6 +25,8 @@
             </atom:js>
             <atom:js src="tests/js/test-9.js"/>
             <atom:js src="tests/js/test-7.js"/>
+            <atom:css src="tests/css/test-1.css">.test-1-inline-from-tag3{}</atom:css>
+            <atom:css src="tests/css/test-10.css" inHead="true"/>
         </c:when>
         <c:when test="${name == 'test1'}">
             <atom:js src="tests/js/test-8.js" inHead="true"/>
@@ -30,6 +34,11 @@
                 console.log('test1 inline code');
             </atom:js>
             <atom:js src="tests/js/test-7.js"  merge="true"/>
+            <atom:css src="tests/css/test-1.css" inline="true">.test-1-inline{}</atom:css>
+            <atom:css src="tests/css/test-5.css" inHead="false"/>
+            <atom:css src="tests/css/test-7.css" inHead="false" merge="true"/>
+            <atom:css src="tests/css/test-9.css" merge="true"/>
+            <atom:css src="tests/css/test-10.css" merge="true" inHead="true"/>
         </c:when>
         <c:when test="${name == 'test7'}">
             <atom:js src="tests/js/test-7.js" inline="true">
@@ -37,11 +46,14 @@
                     $(".test7").text("inline code from test7");
                 });
             </atom:js>
+            <atom:css src="tests/css/test-4.css" inHead="false">.test-4-inline{}</atom:css>
         </c:when>
         <c:when test="${name == 'test6'}">
             <atom:js src="tests/js/test-6.js" on="customevent" defer="true" async="true">
                 console.log('test6 inline code');
             </atom:js>
+            <atom:css src="tests/css/test-3.css">.test-3-inline{}</atom:css>
+            <atom:css src="tests/css/test-10.css" merge="true" />
         </c:when>
         <c:when test="${name == 'test5'}">
             <atom:js src="tests/js/test-5.js" inHead="true" on="customevent">
@@ -52,6 +64,7 @@
             <atom:js src="tests/js/test-4.js" merge="true">
                 console.log('test4 inline code');
             </atom:js>
+            <atom:css src="tests/css/test-8.css" inHead="false"/>
         </c:when>
         <c:when test="${name == 'test8'}">
             <atom:js src="tests/js/test-8.js" inHead="true" on="customevent" merge="true">
@@ -60,6 +73,10 @@
             <atom:js src="tests/js/test-5.js" inHead="true" defer="true" />
             <atom:js src="tests/js/test-11.js" on="ready" />
             <atom:js src="tests/js/test-10.js" on="load" />
+            <atom:css src="tests/css/test-6.css" inHead="false" merge="true"/>
+            <atom:css src="tests/css/test-8.css" merge="true"/>
+            <atom:css src="tests/css/test-10.css" merge="true" inline="true"/>
+            <atom:css src="tests/css/test-11.css" merge="true" inline="true"/>
         </c:when>
 
 

@@ -81,10 +81,10 @@ public class JsCssManager {
         if (srcHolder.containsKey(where)) attrSet = srcHolder.get(where);
         if (attrSet.containsKey(src)){
             boolean[]  array = attrSet.get(src);
-            attributes[0] = array[0];
-            attributes[1] = array[1];
-            attributes[2] = attributes[2] || array[2]; //merge attribute, if some script has it, others also should have it
-            attributes[3] = attributes[3] || array[3]; //inline attribute, if some script has it, others also should have it
+            attributes[Constants.ASYNC] = array[Constants.ASYNC];
+            attributes[Constants.DEFER] = array[Constants.DEFER];
+            attributes[Constants.MERGE] = attributes[Constants.MERGE] || array[Constants.MERGE]; //merge attribute, if some script has it, others also should have it
+            attributes[Constants.INLINE] = attributes[Constants.INLINE] || array[Constants.INLINE]; //inline attribute, if some script has it, others also should have it
         }
         attrSet.put(src, attributes);
         srcHolder.put(where, attrSet);
@@ -101,11 +101,11 @@ public class JsCssManager {
         }
     }
 
-    public boolean hasSrc(String where, String src){
+    public boolean[] getSrc(String where, String src){
         Map<String, boolean[]> attrSet = new LinkedHashMap<>();
         if (srcHolder.containsKey(where)) attrSet = srcHolder.get(where);
-        if (attrSet.containsKey(src)) return true;
-        return false;
+        if (attrSet.containsKey(src)) attrSet.get(src);
+        return null;
     }
 
     private String _getWhere(Boolean inHead){
@@ -119,6 +119,7 @@ public class JsCssManager {
     }
 
     public void clear(){
+        Utils.print(srcHolder, "----------------------------------------------get head print ");
         srcHolder.clear();
         codeHolder.clear();
         if(!Application.isProductionBuild){ //if production build, we store all merged files from all pages and only after build finished, clear it.
@@ -162,7 +163,7 @@ public class JsCssManager {
         while (iter.hasNext()) {
             Map.Entry<String, boolean[]> entry = iter.next();
             array = entry.getValue();
-            if(array[3]){
+            if(array[Constants.INLINE]){
                 //inline code, already added on page in JsTag -> nothing to do, remove this src
                 iter.remove();
                 continue;
@@ -172,9 +173,9 @@ public class JsCssManager {
             if(isHeadTag || !(srcInHead != null && srcInHead.containsKey(src))){
                 //set async or defer attr, defer has more force
                 attribute = "";
-                if (array[0])        attribute = "async=''";
-                else if (array[1])   attribute = "defer=''";
-                if(!array[2]){//not mergeInSingleFile
+                if (array[Constants.ASYNC])        attribute = "async=''";
+                else if (array[Constants.DEFER])   attribute = "defer=''";
+                if(!array[Constants.MERGE]){//not mergeInSingleFile
                     Path path = new Path(src,currentPagePath);
                     tags.append(String.format(tagTemplate, path.relatedPath, attribute));
                     //Utils.print("currentPagePath: " + currentPagePath);

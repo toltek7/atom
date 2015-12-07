@@ -88,8 +88,12 @@ public class Application {
         cssTags.save(inHead, src, code, mergeInSingleFile, inline);
     }
 
-    public static boolean hasJs(String src){
-        return jsTags.hasSrc("head",src);
+    public static boolean[] getJs(String src){
+        return jsTags.getSrc("head",src);
+    }
+
+    public static boolean[] getCss(String src){
+        return cssTags.getSrc("head", src);
     }
 
     public static void clearResourcesHolders(){

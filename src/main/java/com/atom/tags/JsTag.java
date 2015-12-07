@@ -3,6 +3,7 @@ package com.atom.tags;
 import com.atom.Application;
 import com.atom.Constants;
 import com.atom.release.FileManager;
+import com.atom.release.Utils;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -91,8 +92,19 @@ public class JsTag extends SimpleTagSupport {
         //script should be added to the page inline, all others attributes not make force
         if (this.inline) {
             //if already on page do not need to write it
-            if(!Application.hasJs(this.src)){
-                String content = FileManager.readFile(Application.root + "/" + this.src) + this.code;
+            boolean[] attr = Application.getJs(this.src);
+            if (attr == null || !attr[Constants.INLINE]) {
+                if (attr != null) { //in the case inline attribute set to some end script
+                    attr[Constants.INLINE] = true;
+                }
+                String path = Application.root + "/" + this.src,
+                        content = "";
+                if (FileManager.isFileExist(path)) {
+                    content = FileManager.readFile(path);
+                } else {
+                    Utils.print("Warning[JS-tag]: can not find file: " + path);
+                }
+                content += this.code;
                 if (!content.isEmpty()) {
                     out.write(String.format(Constants.SCRIPT_TAG_TEMPLATE, content));
                 }
@@ -110,11 +122,11 @@ public class JsTag extends SimpleTagSupport {
             out.write(String.format(Constants.SCRIPT_TAG_TEMPLATE, this.code));
             this.async = false;
             this.defer = false;
-            this.inHead = true;
+            this.inHead = true;//to rewrite all other such scripts that can be without inline param
             this.code = null;
         }
 
-        if(this.code == null || this.code.isEmpty()){
+        if (this.code == null || this.code.isEmpty()) {
             this.on = "";
         }
 
