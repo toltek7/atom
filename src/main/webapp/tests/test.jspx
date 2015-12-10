@@ -21,6 +21,7 @@
         <test:tag7/>
         <test:tag8/>
         <test:tag9/>
+        <atom:img src="project1/i/i-test.jpg" width="auto" height="100" alt="image"/>
         <div id="test-js"></div>
         <div id="report"></div>
     </div>

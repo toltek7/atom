@@ -150,4 +150,19 @@
         </attribute>
     </tag>
 
+
+    <tag>
+        <name>img</name>
+        <tag-class>com.atom.tags.ImgTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>src</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+        <dynamic-attributes>true</dynamic-attributes>
+
+    </tag>
+
 </taglib>

@@ -1,5 +1,8 @@
 package com.atom.tags;
 
+import com.atom.release.Utils;
+import org.apache.commons.lang3.StringUtils;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.DynamicAttributes;
@@ -28,7 +31,7 @@ public class HtmlTag extends SimpleTagSupport implements DynamicAttributes {
         this.attributes = stringToMap(extraAttributes, attributes);
         JspWriter out = getJspContext().getOut();
         JspFragment body = getJspBody();
-        String startTag = getStartTag(tag, body != null);
+        String startTag = getStartTag(tag, body != null, "");
 
         if (!hasAttributes && dropEmptyTag) {
             if (body != null) body.invoke(null);
@@ -39,8 +42,9 @@ public class HtmlTag extends SimpleTagSupport implements DynamicAttributes {
         }
     }
 
-    private String getStartTag(String tagName, boolean hasBody) {
-        StringBuilder startTag = new StringBuilder("<" + tagName);
+    public String getStartTag(String tagName, boolean hasBody, String forceAttr) {
+        if(StringUtils.isNotBlank(forceAttr)){forceAttr = " " + forceAttr;}
+        StringBuilder startTag = new StringBuilder("<" + tagName + forceAttr); //forceAttr need for img
         for (Map.Entry<String, String> entry : this.attributes.entrySet()) {
             String attributeName = entry.getKey();
             if (!attributeName.equals("tag") && !attributeName.equals("dropEmptyTag")) {

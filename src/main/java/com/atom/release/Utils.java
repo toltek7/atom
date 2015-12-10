@@ -62,4 +62,9 @@ public class Utils {
         String path = ((HttpServletRequest)request).getServletPath();
         return path.contains(".html") || path.contains(".jspx");
     }
+
+    public static String getRelatedPath(String src,String currentPagePath){
+        Path path = new Path(src,currentPagePath);
+        return path.relatedPath;
+    }
 }

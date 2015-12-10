@@ -176,8 +176,8 @@ public class JsCssManager {
                 if (array[Constants.ASYNC])        attribute = "async=''";
                 else if (array[Constants.DEFER])   attribute = "defer=''";
                 if(!array[Constants.MERGE]){//not mergeInSingleFile
-                    Path path = new Path(src,currentPagePath);
-                    tags.append(String.format(tagTemplate, path.relatedPath, attribute));
+                    //Path path = new Path(src,currentPagePath);
+                    tags.append(String.format(tagTemplate, Utils.getRelatedPath(src,currentPagePath), attribute));
                     //Utils.print("currentPagePath: " + currentPagePath);
                     //Utils.print("path.relatedPath: " + path.relatedPath);
                     //Utils.print(String.format(tagTemplate, path.relatedPath, attribute));
@@ -192,8 +192,7 @@ public class JsCssManager {
                         mergedFileAdded = true;
                         //todo not clear what to do in delivery, can be a problems
                         String mergedFilePath = Path.getMergedFilePath(mergedFile, currentPagePath);
-                        Path path = new Path(mergedFilePath,currentPagePath);
-                        tags.append(String.format(tagTemplate, path.relatedPath, ""));
+                        tags.append(String.format(tagTemplate, Utils.getRelatedPath(mergedFilePath,currentPagePath), ""));
                     }
                 }
             }else{
